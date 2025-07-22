@@ -2,6 +2,13 @@ import { useState } from "react";
 import { AinboxSidebar } from "./AinboxSidebar";
 import { EmailDetail } from "./EmailDetail";
 import { AiAssistantPanel } from "./AiAssistantPanel";
+import { Summarizer } from "./Summarizer";
+import { Deadliner } from "./Deadliner";
+import { AiTagging } from "./AiTagging";
+import { SendLater } from "./SendLater";
+import { Drafts } from "./Drafts";
+import { CalendarView } from "./CalendarView";
+import { MoreTools } from "./MoreTools";
 
 // Mock email data
 const mockEmails = [
@@ -57,6 +64,19 @@ export const AinboxManager = () => {
   const [selectedEmail, setSelectedEmail] = useState(mockEmails[0]);
   const [selectedSection, setSelectedSection] = useState("inbox");
 
+  const renderMainContent = () => {
+    switch (selectedSection) {
+      case "summarizer": return <Summarizer emails={mockEmails} />;
+      case "deadliner": return <Deadliner emails={mockEmails} />;
+      case "ai-tagging": return <AiTagging emails={mockEmails} />;
+      case "send-later": return <SendLater emails={mockEmails} />;
+      case "drafts": return <Drafts emails={mockEmails} />;
+      case "calendar": return <CalendarView emails={mockEmails} />;
+      case "more": return <MoreTools emails={mockEmails} />;
+      default: return <EmailDetail email={selectedEmail} />;
+    }
+  };
+
   return (
     <div className="h-screen flex bg-background">
       {/* Left Sidebar */}
@@ -66,14 +86,12 @@ export const AinboxManager = () => {
       />
       
       {/* Email Detail - Center */}
-      <EmailDetail 
-        email={selectedEmail}
-      />
+      {renderMainContent()}
       
-      {/* AI Assistant Panel - Right */}
-      <AiAssistantPanel 
-        email={selectedEmail}
-      />
+      {/* AI Assistant Panel - Right - only show for inbox/email view */}
+      {(selectedSection === "inbox" || selectedSection === "archive") && (
+        <AiAssistantPanel email={selectedEmail} />
+      )}
     </div>
   );
 };

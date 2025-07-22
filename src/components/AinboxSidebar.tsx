@@ -8,7 +8,8 @@ import {
   FileEdit, 
   Inbox, 
   Archive,
-  Sparkles
+  Sparkles,
+  Calendar
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -25,6 +26,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
     { id: "deadliner", label: "Deadliner", icon: Clock, count: 5 },
     { id: "ai-tagging", label: "AI Tagging", icon: Tag },
     { id: "ai-assistant", label: "AI Asistent", icon: Bot },
+    { id: "calendar", label: "Kalendár", icon: Calendar, count: 8 },
     { id: "more", label: "More", icon: MoreHorizontal },
   ];
 
