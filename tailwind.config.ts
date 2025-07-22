@@ -52,6 +52,17 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				'ai-primary': 'hsl(var(--ai-primary))',
+				'ai-primary-light': 'hsl(var(--ai-primary-light))',
+				'ai-success': 'hsl(var(--ai-success))',
+				'ai-success-light': 'hsl(var(--ai-success-light))',
+				'ai-warning': 'hsl(var(--ai-warning))',
+				'ai-warning-light': 'hsl(var(--ai-warning-light))',
+				'ai-sidebar': 'hsl(var(--ai-sidebar))',
+				'ai-border': 'hsl(var(--ai-border))',
+				'email-unread': 'hsl(var(--email-unread))',
+				'email-urgent': 'hsl(var(--email-urgent))',
+				'email-normal': 'hsl(var(--email-normal))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
