@@ -80,8 +80,8 @@ export const AinboxManager = () => {
       case "all-emails": return <EmailsList emails={mockEmails} />;
       case "trash": return <Trash emails={mockEmails} />;
       case "settings": return (
-        <div className="flex-1 overflow-auto">
-          <div className="max-w-4xl mx-auto p-6 space-y-8">
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto p-6 space-y-8 min-h-full">
             <div className="flex items-center gap-3 mb-6">
               <div className="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
                 <Settings className="h-5 w-5 text-primary-foreground" />
@@ -92,17 +92,85 @@ export const AinboxManager = () => {
               </div>
             </div>
             
-            {/* Settings content will go here - for now just a placeholder */}
-            <div className="p-6 bg-card rounded-lg border text-center">
-              <h3 className="text-lg font-medium mb-2">Nastavenia profilu</h3>
-              <p className="text-muted-foreground mb-4">
-                Kliknite na svoj profil v ľavom hornom rohu pre prístup k detailným nastaveniam.
-              </p>
-              <div className="flex gap-2 justify-center">
-                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Profil</div>
-                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Bezpečnosť</div>
-                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Notifikácie</div>
-                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Predplatné</div>
+            {/* Settings content - expanded for scrolling demo */}
+            <div className="space-y-6">
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="text-lg font-medium mb-4">Rýchly prístup k nastaveniam</h3>
+                <p className="text-muted-foreground mb-4">
+                  Kliknite na svoj profil v ľavom hornom rohu pre prístup k detailným nastaveniam.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">👤 Profil</div>
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🔒 Bezpečnosť</div>
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🔔 Notifikácie</div>
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">💳 Predplatné</div>
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🌙 Tmavý režim</div>
+                  <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🌍 Jazyk</div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="text-lg font-medium mb-4">Najčastejšie používané</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <span className="font-medium">Zmeniť heslo</span>
+                    <span className="text-sm text-muted-foreground">Zabezpečenie účtu</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <span className="font-medium">Spravovať predplatné</span>
+                    <span className="text-sm text-muted-foreground">Platby a plány</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <span className="font-medium">Nastavenia notifikácií</span>
+                    <span className="text-sm text-muted-foreground">Email upozornenia</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="text-lg font-medium mb-4">Podpora a nápoveda</h3>
+                <div className="space-y-3">
+                  <div className="p-4 bg-primary/5 rounded-lg">
+                    <h4 className="font-medium mb-2">🆘 Potrebujete pomoc?</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Prečítajte si našu dokumentáciu alebo kontaktujte podporu.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-primary/5 rounded-lg">
+                    <h4 className="font-medium mb-2">📖 Používateľská príručka</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Naučte sa využívať všetky funkcie aplikácie na maximum.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-primary/5 rounded-lg">
+                    <h4 className="font-medium mb-2">🔄 Aktualizácie</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Zostaňte informovaní o najnovších funkciách a vylepšeniach.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Extra content to make scrolling visible */}
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="text-lg font-medium mb-4">Pokročilé nastavenia</h3>
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">API prístup</h4>
+                    <p className="text-sm text-muted-foreground mb-2">Spravujte API kľúče a integrácie</p>
+                    <Button variant="outline" size="sm">Spravovať API</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Export dát</h4>
+                    <p className="text-sm text-muted-foreground mb-2">Stiahnite všetky vaše dáta</p>
+                    <Button variant="outline" size="sm">Exportovať</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Vymazanie účtu</h4>
+                    <p className="text-sm text-muted-foreground mb-2">Natrvalo vymazať váš účet a všetky dáta</p>
+                    <Button variant="destructive" size="sm">Vymazať účet</Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
