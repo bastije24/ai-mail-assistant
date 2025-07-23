@@ -76,7 +76,7 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto animate-slide-in-right data-[state=closed]:animate-slide-out-right">
         <DialogHeader>
           <DialogTitle>Odpoveď na: {email.subject}</DialogTitle>
         </DialogHeader>
