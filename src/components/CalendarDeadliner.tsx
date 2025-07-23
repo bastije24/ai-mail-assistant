@@ -141,25 +141,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Kalendár</h1>
-        <p className="text-gray-600">Automatické plánovanie z emailov a stretnutí</p>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <Card key={index} className="p-4">
-            <CardContent className="p-0">
-              <div className="flex items-center gap-3">
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                <div>
-                  <div className="text-2xl font-bold">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <h1 className="text-2xl font-bold text-foreground mb-2">Kalendár</h1>
+        <p className="text-muted-foreground">Plánovanie stretnutí a termínov</p>
       </div>
 
       {/* Main Layout */}

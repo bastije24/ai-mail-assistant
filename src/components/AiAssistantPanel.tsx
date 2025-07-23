@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   Zap, 
   FileText, 
@@ -13,6 +14,7 @@ import {
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { ComposeEmailReply } from "./ComposeEmailReply";
 
 interface Email {
   id: string;
@@ -32,6 +34,8 @@ interface AiAssistantPanelProps {
 }
 
 export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
+  const [replyDialogOpen, setReplyDialogOpen] = useState(false);
+  const [selectedConceptId, setSelectedConceptId] = useState<string>();
   const aiConcepts = [
     {
       id: "A",
@@ -119,8 +123,8 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
               key={concept.id} 
               className={`cursor-pointer hover:shadow-sm transition-shadow border ${concept.color}`}
               onClick={() => {
-                console.log(`Generujem ${concept.type} pre email:`, concept.id);
-                // Tu by sa spustila generácia odpovede na základe typu
+                setSelectedConceptId(concept.id);
+                setReplyDialogOpen(true);
               }}
             >
               <CardContent className="p-4">
@@ -192,6 +196,13 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
           </CardContent>
         </Card>
       </div>
+
+      <ComposeEmailReply 
+        email={email}
+        open={replyDialogOpen}
+        onOpenChange={setReplyDialogOpen}
+        selectedConceptId={selectedConceptId}
+      />
     </div>
   );
 };

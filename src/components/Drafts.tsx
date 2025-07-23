@@ -224,19 +224,36 @@ export const Drafts = ({ emails }: DraftsProps) => {
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 border-t border-border">
-                    <Button size="sm" className="bg-ai-primary hover:bg-ai-primary/90">
+                    <Button 
+                      size="sm" 
+                      className="bg-ai-primary hover:bg-ai-primary/90"
+                      onClick={() => console.log(`Pokračujem v úprave draftu ${draft.id}`)}
+                    >
                       <FileEdit className="mr-2 h-3 w-3" />
                       Pokračovať
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => console.log(`Odosielam draft ${draft.id}`)}
+                    >
                       <Send className="mr-2 h-3 w-3" />
                       Odoslať
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => console.log(`Ukladám draft ${draft.id}`)}
+                    >
                       <Save className="mr-2 h-3 w-3" />
                       Uložiť
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => console.log(`Mažem draft ${draft.id}`)}
+                    >
                       <Trash2 className="mr-2 h-3 w-3" />
                       Zmazať
                     </Button>

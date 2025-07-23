@@ -92,12 +92,13 @@ export const SendLater = ({ emails }: SendLaterProps) => {
     if (diffHours < 0) return "Odoslané";
     if (diffHours < 24) {
       const hours = Math.ceil(diffHours);
-      return `Za ${hours} hodín`;
+      return `Za ${hours}h`;
     }
     
     return date.toLocaleDateString('sk-SK', { 
-      day: 'numeric', 
-      month: 'short',
+      day: '2-digit', 
+      month: '2-digit',
+      year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });

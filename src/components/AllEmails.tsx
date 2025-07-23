@@ -96,9 +96,11 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
     console.log(`Archiving email ${emailId}`);
   };
 
-  const handleDelete = (emailId: string) => {
-    setEmailList(emails => emails.filter(email => email.id !== emailId));
-    console.log(`Deleting email ${emailId}`);
+  const handleMoveToTrash = (emailId: string) => {
+    setEmailList(emails => emails.map(email => 
+      email.id === emailId ? { ...email, status: "deleted", deletedAt: new Date() } : email
+    ));
+    console.log(`Moving email ${emailId} to trash`);
   };
 
   const handleMarkAsRead = (emailId: string) => {
@@ -246,8 +248,8 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
                     <Button 
                       size="sm" 
                       variant="ghost"
-                      onClick={() => handleDelete(email.id)}
-                      title="Odstrániť"
+                      onClick={() => handleMoveToTrash(email.id)}
+                      title="Presunúť do koša"
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>

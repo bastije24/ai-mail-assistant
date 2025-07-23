@@ -7,7 +7,7 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CalendarIcon, Send, Clock } from "lucide-react";
+import { CalendarIcon, Send, Clock, Paperclip, X } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -33,8 +33,28 @@ export const ComposeEmailDialog = ({
     content: content,
     priority: "medium",
     scheduledDate: undefined as Date | undefined,
-    scheduledTime: ""
+    scheduledTime: "",
+    attachments: [] as File[]
   });
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setFormData(prev => ({
+      ...prev,
+      attachments: [...prev.attachments, ...files]
+    }));
+  };
+
+  const removeAttachment = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleTimeChange = (newTime: string) => {
+    setFormData(prev => ({ ...prev, scheduledTime: newTime }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,15 +62,26 @@ export const ComposeEmailDialog = ({
       return;
     }
 
+    if (formData.scheduledDate && !formData.scheduledTime) {
+      alert("Prosím vyberte čas pre naplánovanie emailu");
+      return;
+    }
+
     const newEmail = {
       id: Date.now().toString(),
       to: formData.to,
+      toName: formData.to.split('@')[0],
       subject: formData.subject,
       content: formData.content,
       priority: formData.priority,
       timestamp: new Date(),
-      scheduledFor: formData.scheduledDate ? new Date(`${format(formData.scheduledDate, "yyyy-MM-dd")}T${formData.scheduledTime}`) : undefined,
-      status: formData.scheduledDate ? "scheduled" : "sent"
+      scheduledFor: formData.scheduledDate && formData.scheduledTime ? 
+        new Date(`${format(formData.scheduledDate, "yyyy-MM-dd")}T${formData.scheduledTime}`) : 
+        undefined,
+      status: formData.scheduledDate ? "scheduled" : "sent",
+      attachments: formData.attachments.map(file => file.name),
+      category: "Nový",
+      previewText: formData.content.substring(0, 100) + "..."
     };
 
     onEmailCreate?.(newEmail);
@@ -61,7 +92,8 @@ export const ComposeEmailDialog = ({
       content: "",
       priority: "medium",
       scheduledDate: undefined,
-      scheduledTime: ""
+      scheduledTime: "",
+      attachments: []
     });
   };
 
@@ -148,6 +180,50 @@ export const ComposeEmailDialog = ({
                   onChange={(e) => setFormData({ ...formData, scheduledTime: e.target.value })}
                   required={!!formData.scheduledDate}
                 />
+              </div>
+            )}
+          </div>
+
+          {/* Attachments */}
+          <div className="space-y-2">
+            <Label>Prílohy</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="file"
+                multiple
+                onChange={handleFileUpload}
+                className="hidden"
+                id="file-upload"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                <Paperclip className="mr-2 h-4 w-4" />
+                Pridať prílohy
+              </Button>
+              {formData.attachments.length > 0 && (
+                <span className="text-sm text-muted-foreground">
+                  {formData.attachments.length} súborov
+                </span>
+              )}
+            </div>
+            {formData.attachments.length > 0 && (
+              <div className="space-y-1">
+                {formData.attachments.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded">
+                    <span className="text-sm">{file.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeAttachment(index)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
               </div>
             )}
           </div>

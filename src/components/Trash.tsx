@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Trash2, RotateCcw, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -67,16 +68,21 @@ export const Trash = ({ emails }: TrashProps) => {
     return `Zmazané pred ${diffDays} dňami`;
   };
 
+  const [emailsInTrash, setEmailsInTrash] = useState(deletedEmails);
+
   const handleRestore = (emailId: string) => {
-    console.log(`Restoring email ${emailId}`);
+    setEmailsInTrash(emails => emails.filter(email => email.id !== emailId));
+    console.log(`Restored email ${emailId} back to inbox`);
   };
 
   const handlePermanentDelete = (emailId: string) => {
-    console.log(`Permanently deleting email ${emailId}`);
+    setEmailsInTrash(emails => emails.filter(email => email.id !== emailId));
+    console.log(`Permanently deleted email ${emailId}`);
   };
 
   const handleEmptyTrash = () => {
-    console.log('Emptying trash');
+    setEmailsInTrash([]);
+    console.log('Emptied entire trash');
   };
 
   return (
@@ -88,11 +94,11 @@ export const Trash = ({ emails }: TrashProps) => {
           </div>
           <div>
             <h1 className="text-xl font-semibold text-foreground">Kôš</h1>
-            <p className="text-sm text-muted-foreground">Vymazané emaily - {deletedEmails.length} položiek</p>
+            <p className="text-sm text-muted-foreground">Vymazané emaily - {emailsInTrash.length} položiek</p>
           </div>
         </div>
         
-        {deletedEmails.length > 0 && (
+        {emailsInTrash.length > 0 && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" size="sm">
@@ -118,7 +124,7 @@ export const Trash = ({ emails }: TrashProps) => {
         )}
       </div>
 
-      {deletedEmails.length === 0 ? (
+      {emailsInTrash.length === 0 ? (
         <Card className="text-center py-12">
           <CardContent>
             <Trash2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -128,7 +134,7 @@ export const Trash = ({ emails }: TrashProps) => {
         </Card>
       ) : (
         <div className="space-y-3">
-          {deletedEmails.map((email) => (
+          {emailsInTrash.map((email) => (
             <Card key={email.id} className="hover:shadow-sm transition-shadow border-red-200">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
