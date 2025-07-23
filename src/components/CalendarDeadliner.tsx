@@ -131,9 +131,9 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       </div>
 
       {/* Hlavný kalendár a udalosti */}
-      <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-5 gap-8">
         
-        {/* Kalendár */}
+        <div className="lg:col-span-2">{/* Kalendár */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -168,45 +168,46 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
           </CardContent>
         </Card>
 
+        </div>
+
         {/* Udalosti pre vybraný deň */}
+        <div className="lg:col-span-3">
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between mb-4">
-              <CardTitle>
-                {selectedDate?.toLocaleDateString('sk-SK', { 
-                  weekday: 'long',
-                  day: 'numeric', 
-                  month: 'long' 
-                })}
-              </CardTitle>
-              
-              {/* Filter buttons */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-                <Button 
-                  variant={filter === "all" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-7 px-3 text-xs"
-                  onClick={() => setFilter("all")}
-                >
-                  Všetko
-                </Button>
-                <Button 
-                  variant={filter === "meeting" ? "default" : "ghost"}
-                  size="sm" 
-                  className="h-7 px-3 text-xs"
-                  onClick={() => setFilter("meeting")}
-                >
-                  Meetings
-                </Button>
-                <Button 
-                  variant={filter === "deadline" ? "default" : "ghost"}
-                  size="sm"
-                  className="h-7 px-3 text-xs" 
-                  onClick={() => setFilter("deadline")}
-                >
-                  Deadliny
-                </Button>
-              </div>
+            <CardTitle>
+              {selectedDate?.toLocaleDateString('sk-SK', { 
+                weekday: 'long',
+                day: 'numeric', 
+                month: 'long' 
+              })}
+            </CardTitle>
+            
+            {/* Filter buttons pod nadpisom */}
+            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+              <Button 
+                variant={filter === "all" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs"
+                onClick={() => setFilter("all")}
+              >
+                Všetko
+              </Button>
+              <Button 
+                variant={filter === "meeting" ? "default" : "ghost"}
+                size="sm" 
+                className="h-7 px-3 text-xs"
+                onClick={() => setFilter("meeting")}
+              >
+                Meetings
+              </Button>
+              <Button 
+                variant={filter === "deadline" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs" 
+                onClick={() => setFilter("deadline")}
+              >
+                Deadliny
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -281,10 +282,11 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
             )}
           </CardContent>
         </Card>
+        </div>
       </div>
 
       {/* Prehľad nadchádzajúcich udalostí */}
-      <Card className="max-w-5xl mx-auto">
+      <Card className="max-w-6xl mx-auto">
         <CardHeader>
           <CardTitle>Nadchádzajúce udalosti</CardTitle>
         </CardHeader>
