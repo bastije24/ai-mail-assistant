@@ -18,13 +18,20 @@ import {
   Shield,
   LogOut,
   ChevronDown,
-  X
+  X,
+  Camera,
+  Upload,
+  Eye,
+  EyeOff,
+  Save
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Dialog, DialogContent } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 interface AinboxSidebarProps {
   selectedSection: string;
@@ -33,6 +40,11 @@ interface AinboxSidebarProps {
 
 export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSidebarProps) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [changingEmail, setChangingEmail] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const aiTools = [
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
     { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
@@ -152,29 +164,254 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
               <div className="max-w-4xl mx-auto space-y-8">
                 {/* Profile Section */}
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Profil používateľa
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-card rounded-lg border">
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium">Meno</label>
-                        <p className="text-lg">Martin Kováč</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium">Email</label>
-                        <p className="text-lg">martin.kovac@email.com</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Avatar className="h-24 w-24">
-                        <AvatarFallback className="bg-ai-primary text-primary-foreground text-2xl font-medium">
-                          MK
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      Profil používateľa
+                    </h3>
+                    {!editingProfile && (
+                      <Button variant="outline" size="sm" onClick={() => setEditingProfile(true)}>
+                        Upraviť profil
+                      </Button>
+                    )}
                   </div>
+                  
+                  {editingProfile ? (
+                    <div className="p-6 bg-card rounded-lg border space-y-6">
+                      {/* Profile Photo Upload */}
+                      <div className="flex flex-col items-center space-y-4">
+                        <div className="relative">
+                          <Avatar className="h-24 w-24">
+                            <AvatarFallback className="bg-ai-primary text-primary-foreground text-2xl font-medium">
+                              MK
+                            </AvatarFallback>
+                          </Avatar>
+                          <Button 
+                            size="icon" 
+                            variant="secondary"
+                            className="absolute -bottom-2 -right-2 rounded-full h-8 w-8"
+                          >
+                            <Camera className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Nahrať foto
+                          </Button>
+                          <Button size="sm" variant="outline" className="text-red-600">
+                            Odstrániť
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground text-center">
+                          Odporúčané: JPG, PNG do 5MB. Minimálne 400x400px
+                        </p>
+                      </div>
+                      
+                      {/* Profile Form */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName">Krstné meno</Label>
+                          <Input id="firstName" defaultValue="Martin" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">Priezvisko</Label>
+                          <Input id="lastName" defaultValue="Kováč" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="company">Spoločnosť</Label>
+                          <Input id="company" placeholder="Názov spoločnosti" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="position">Pozícia</Label>
+                          <Input id="position" placeholder="Vaša pozícia" />
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setEditingProfile(false)}>
+                          Zrušiť
+                        </Button>
+                        <Button onClick={() => setEditingProfile(false)}>
+                          <Save className="h-4 w-4 mr-2" />
+                          Uložiť zmeny
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-card rounded-lg border">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Meno</label>
+                          <p className="text-lg font-medium">Martin Kováč</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Email</label>
+                          <p className="text-lg">martin.kovac@email.com</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Spoločnosť</label>
+                          <p className="text-sm text-muted-foreground">Nenastavená</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <Avatar className="h-24 w-24">
+                          <AvatarFallback className="bg-ai-primary text-primary-foreground text-2xl font-medium">
+                            MK
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Email Change Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold flex items-center gap-2">
+                      <Mail className="h-5 w-5" />
+                      Zmena emailu
+                    </h3>
+                    {!changingEmail && (
+                      <Button variant="outline" size="sm" onClick={() => setChangingEmail(true)}>
+                        Zmeniť email
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {changingEmail ? (
+                    <div className="p-6 bg-card rounded-lg border space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="currentEmail">Aktuálny email</Label>
+                        <Input id="currentEmail" value="martin.kovac@email.com" disabled />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newEmail">Nový email</Label>
+                        <Input id="newEmail" type="email" placeholder="novy@email.com" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Potvrdenie hesla</Label>
+                        <Input id="confirmPassword" type="password" placeholder="Zadajte heslo pre potvrdenie" />
+                      </div>
+                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                        <p className="text-sm text-yellow-800">
+                          <strong>Upozornenie:</strong> Na nový email bude odoslaný verifikačný odkaz. 
+                          Pôvodný email bude aktívny až do overenia nového.
+                        </p>
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setChangingEmail(false)}>
+                          Zrušiť
+                        </Button>
+                        <Button>Zmeniť email</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-6 bg-card rounded-lg border">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">martin.kovac@email.com</p>
+                          <p className="text-sm text-muted-foreground">Overený email</p>
+                        </div>
+                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                          Overený
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Password Change Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold flex items-center gap-2">
+                      <Shield className="h-5 w-5" />
+                      Zmena hesla
+                    </h3>
+                    {!changingPassword && (
+                      <Button variant="outline" size="sm" onClick={() => setChangingPassword(true)}>
+                        Zmeniť heslo
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {changingPassword ? (
+                    <div className="p-6 bg-card rounded-lg border space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="currentPassword">Aktuálne heslo</Label>
+                        <div className="relative">
+                          <Input 
+                            id="currentPassword" 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="Zadajte aktuálne heslo" 
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="newPassword">Nové heslo</Label>
+                        <div className="relative">
+                          <Input 
+                            id="newPassword" 
+                            type={showNewPassword ? "text" : "password"} 
+                            placeholder="Zadajte nové heslo" 
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                          >
+                            {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmNewPassword">Potvrdenie nového hesla</Label>
+                        <Input id="confirmNewPassword" type="password" placeholder="Zopakujte nové heslo" />
+                      </div>
+                      
+                      {/* Password Requirements */}
+                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                        <p className="text-sm font-medium text-blue-900 mb-2">Požiadavky na heslo:</p>
+                        <ul className="text-sm text-blue-800 space-y-1">
+                          <li>• Minimálne 8 znakov</li>
+                          <li>• Aspoň jedno veľké písmeno</li>
+                          <li>• Aspoň jedno malé písmeno</li>
+                          <li>• Aspoň jedna číslica</li>
+                          <li>• Aspoň jeden špeciálny znak (!@#$%^&*)</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={() => setChangingPassword(false)}>
+                          Zrušiť
+                        </Button>
+                        <Button>Zmeniť heslo</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-6 bg-card rounded-lg border">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Heslo</p>
+                          <p className="text-sm text-muted-foreground">Naposledy zmenené pred 3 mesiacmi</p>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          ••••••••
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* General Settings */}
@@ -241,13 +478,6 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                   <div className="p-6 bg-card rounded-lg border space-y-4">
                     <div className="flex items-center justify-between py-2">
                       <div>
-                        <span className="font-medium">Zmeniť heslo</span>
-                        <p className="text-sm text-muted-foreground">Naposledy zmenené pred 3 mesiacmi</p>
-                      </div>
-                      <Button variant="outline" size="sm">Zmeniť</Button>
-                    </div>
-                    <div className="flex items-center justify-between py-2">
-                      <div>
                         <span className="font-medium">Dvojfaktorové overenie</span>
                         <p className="text-sm text-muted-foreground">Dodatočná ochrana vašeho účtu</p>
                       </div>
@@ -259,6 +489,13 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                         <p className="text-sm text-muted-foreground">Spravovať prihlásené zariadenia</p>
                       </div>
                       <Button variant="outline" size="sm">Zobraziť</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">História prihlásení</span>
+                        <p className="text-sm text-muted-foreground">Zobraziť nedávne prihlásenia</p>
+                      </div>
+                      <Button variant="outline" size="sm">História</Button>
                     </div>
                   </div>
                 </div>
