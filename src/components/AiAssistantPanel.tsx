@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { ComposeEmailReply } from "./ComposeEmailReply";
+import { ComposeEmailReply } from "@/features/email";
 
 interface Message {
   id: string;

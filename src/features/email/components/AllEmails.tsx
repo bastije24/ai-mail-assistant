@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ComposeEmailDialog } from "@/components/ComposeEmailDialog";
-import { EmailTagManager } from "@/components/EmailTagManager";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
+import { EmailTagManager } from "./EmailTagManager";
 import type { Email, EmailListProps } from "../types";
 
 export const AllEmails = ({ emails }: EmailListProps) => {

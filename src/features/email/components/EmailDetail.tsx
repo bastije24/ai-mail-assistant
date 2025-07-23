@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { ComposeEmailDialog } from "@/components/ComposeEmailDialog";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import { ComposeEmailReply } from "./ComposeEmailReply";
 import type { Email, EmailDetailProps } from "../types";
 

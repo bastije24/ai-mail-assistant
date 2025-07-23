@@ -4,8 +4,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Separator } from "./ui/separator";
-import { ComposeEmailDialog } from "./ComposeEmailDialog";
-import { ComposeEmailReply } from "./ComposeEmailReply";
+import { ComposeEmailDialog, ComposeEmailReply } from "@/features/email";
 import { EmailSpecificAI } from "./EmailSpecificAI";
 
 interface Email {

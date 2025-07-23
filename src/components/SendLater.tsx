@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { ComposeEmailDialog } from "./ComposeEmailDialog";
+import { ComposeEmailDialog } from "@/features/email";
 
 interface Email {
   id: string;

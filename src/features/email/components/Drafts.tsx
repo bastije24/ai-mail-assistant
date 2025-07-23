@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ComposeEmailDialog } from "@/components/ComposeEmailDialog";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import type { EmailListProps } from "../types";
 
 export const Drafts = ({ emails }: EmailListProps) => {

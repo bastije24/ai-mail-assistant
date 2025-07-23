@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { ComposeEmailDialog } from "./ComposeEmailDialog";
-import { EmailTagManager } from "./EmailTagManager";
+import { ComposeEmailDialog, EmailTagManager } from "@/features/email";
 
 interface Email {
   id: string;
