@@ -130,10 +130,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         <p className="text-gray-600">Stretnutia, deadliny a dôležité termíny</p>
       </div>
 
-      {/* Hlavný kalendár a udalosti */}
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-5 gap-8">
-        
-        <div className="lg:col-span-2">{/* Kalendár */}
+      {/* Kalendár hore */}
+      <div className="max-w-4xl mx-auto">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -152,7 +150,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              className="rounded-md border-0 w-full"
+              className="rounded-md border-0 w-full mx-auto"
               modifiers={{
                 hasEvents: datesWithEvents
               }}
@@ -167,11 +165,10 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
             />
           </CardContent>
         </Card>
+      </div>
 
-        </div>
-
-        {/* Udalosti pre vybraný deň */}
-        <div className="lg:col-span-3">
+      {/* Udalosti dole pod kalendárom */}
+      <div className="max-w-6xl mx-auto">
         <Card>
           <CardHeader>
             <CardTitle>
@@ -221,7 +218,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {selectedDateEvents.map((event) => (
                   <div 
                     key={event.id} 
@@ -245,18 +242,18 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                     </div>
 
                     {event.description && (
-                      <p className="text-sm text-gray-600 mb-3 ml-7">{event.description}</p>
+                      <p className="text-sm text-gray-600 mb-3">{event.description}</p>
                     )}
 
                     {event.location && (
-                      <div className="text-sm text-gray-600 ml-7 flex items-center gap-1">
+                      <div className="text-sm text-gray-600 flex items-center gap-1 mb-2">
                         📍 {event.location}
                         {event.attendees && ` • ${event.attendees} ľudí`}
                       </div>
                     )}
 
                     {event.onlineLink && (
-                      <div className="mt-3 ml-7 p-3 bg-white rounded-lg border">
+                      <div className="mt-3 p-3 bg-white rounded-lg border">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 text-sm font-medium">
@@ -282,7 +279,6 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
             )}
           </CardContent>
         </Card>
-        </div>
       </div>
 
       {/* Prehľad nadchádzajúcich udalostí */}
@@ -291,14 +287,14 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
           <CardTitle>Nadchádzajúce udalosti</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {allEvents
               .filter(event => {
                 const eventDate = new Date(event.date);
                 const today = new Date();
                 return eventDate > today;
               })
-              .slice(0, 6)
+              .slice(0, 8)
               .map((event) => (
                 <div 
                   key={event.id} 
