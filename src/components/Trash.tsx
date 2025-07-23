@@ -7,10 +7,12 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 interface Email {
   id: string;
   from: string;
+  fromEmail?: string;
   subject: string;
   content: string;
   timestamp: Date;
   isUrgent?: boolean;
+  deletedAt?: Date;
 }
 
 interface TrashProps {
@@ -49,11 +51,20 @@ export const Trash = ({ emails }: TrashProps) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('sk-SK', {
       day: '2-digit',
-      month: '2-digit',
+      month: '2-digit', 
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const formatDeletedDate = (date: Date) => {
+    const now = new Date();
+    const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffHours < 24) return `Zmazané pred ${diffHours}h`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `Zmazané pred ${diffDays} dňami`;
   };
 
   const handleRestore = (emailId: string) => {

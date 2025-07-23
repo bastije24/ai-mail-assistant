@@ -115,7 +115,14 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
         </h3>
         <div className="space-y-3">
           {aiConcepts.map((concept) => (
-            <Card key={concept.id} className={`cursor-pointer hover:shadow-sm transition-shadow border ${concept.color}`}>
+            <Card 
+              key={concept.id} 
+              className={`cursor-pointer hover:shadow-sm transition-shadow border ${concept.color}`}
+              onClick={() => {
+                console.log(`Generujem ${concept.type} pre email:`, concept.id);
+                // Tu by sa spustila generácia odpovede na základe typu
+              }}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0">
@@ -149,6 +156,10 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
               variant={action.variant}
               size="sm"
               className="h-auto py-3 flex flex-col items-center gap-2 text-xs"
+              onClick={() => {
+                console.log(`Vykonávam akciu: ${action.label}`);
+                // Tu by sa spustila konkrétna akcia
+              }}
             >
               <action.icon className="h-4 w-4" />
               {action.label}

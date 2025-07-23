@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Send, Clock, FileEdit, Archive, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
 
 interface Email {
   id: string;
@@ -17,7 +19,7 @@ interface SendLaterProps {
 }
 
 export const SendLater = ({ emails }: SendLaterProps) => {
-  const scheduledEmails = [
+  const [scheduledEmails, setScheduledEmails] = useState([
     {
       id: "1",
       to: "jan.novak@firma.sk",
@@ -62,7 +64,7 @@ export const SendLater = ({ emails }: SendLaterProps) => {
       previewText: "Pripomíname, že mesačný report je potrebné dodať do...",
       category: "Reminder"
     }
-  ];
+  ]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -104,6 +106,24 @@ export const SendLater = ({ emails }: SendLaterProps) => {
   const scheduledCount = scheduledEmails.filter(e => e.status === "scheduled").length;
   const sentCount = scheduledEmails.filter(e => e.status === "sent").length;
 
+  const handleEmailCreate = (newEmail: any) => {
+    setScheduledEmails([...scheduledEmails, newEmail]);
+  };
+
+  const handleSendNow = (emailId: string) => {
+    setScheduledEmails(emails => 
+      emails.map(email => 
+        email.id === emailId 
+          ? { ...email, status: "sent", scheduledFor: new Date() }
+          : email
+      )
+    );
+  };
+
+  const handleArchive = (emailId: string) => {
+    setScheduledEmails(emails => emails.filter(email => email.id !== emailId));
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -142,10 +162,12 @@ export const SendLater = ({ emails }: SendLaterProps) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-foreground">Naplánované emaily</h2>
-          <Button className="bg-ai-primary hover:bg-ai-primary/90">
-            <FileEdit className="mr-2 h-4 w-4" />
-            Nový email
-          </Button>
+          <ComposeEmailDialog onEmailCreate={handleEmailCreate}>
+            <Button className="bg-ai-primary hover:bg-ai-primary/90">
+              <FileEdit className="mr-2 h-4 w-4" />
+              Nový email
+            </Button>
+          </ComposeEmailDialog>
         </div>
 
         <div className="space-y-3">
@@ -199,15 +221,27 @@ export const SendLater = ({ emails }: SendLaterProps) => {
 
                 {email.status === "scheduled" && (
                   <div className="flex items-center gap-2 pt-2 border-t border-border">
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => console.log(`Upravujem email ${email.id}`)}
+                    >
                       <FileEdit className="mr-2 h-3 w-3" />
                       Upraviť
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => console.log(`Mením čas pre email ${email.id}`)}
+                    >
                       <Clock className="mr-2 h-3 w-3" />
                       Zmeniť čas
                     </Button>
-                    <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                    <Button 
+                      size="sm" 
+                      className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                      onClick={() => handleSendNow(email.id)}
+                    >
                       <Send className="mr-2 h-3 w-3" />
                       Odoslať teraz
                     </Button>
@@ -220,7 +254,12 @@ export const SendLater = ({ emails }: SendLaterProps) => {
                       <Star className="h-3 w-3" />
                       <span>Úspešne odoslané</span>
                     </div>
-                    <Button size="sm" variant="ghost" className="ml-auto">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="ml-auto"
+                      onClick={() => handleArchive(email.id)}
+                    >
                       <Archive className="mr-2 h-3 w-3" />
                       Archivovať
                     </Button>
@@ -239,13 +278,25 @@ export const SendLater = ({ emails }: SendLaterProps) => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-2">
-            <Button size="sm" variant="outline">
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => console.log("Naplánovanie na za 1 hodinu")}
+            >
               Za 1 hodinu
             </Button>
-            <Button size="sm" variant="outline">
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => console.log("Naplánovanie na zajtra ráno")}
+            >
               Zajtra ráno
             </Button>
-            <Button size="sm" variant="outline">
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => console.log("Naplánovanie na budúci týždeň")}
+            >
               Budúci týždeň
             </Button>
           </div>

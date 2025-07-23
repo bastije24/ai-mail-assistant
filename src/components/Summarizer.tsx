@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Sparkles, TrendingUp, Mail, Clock, AlertCircle, Info, CheckCircle2, Filter, Calendar } from "lucide-react";
+import { Sparkles, TrendingUp, Mail, Clock, AlertCircle, Info, CheckCircle2, Filter, Calendar, Eye, Archive, Tag } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
+import { EmailTagManager } from "./EmailTagManager";
 
 interface Email {
   id: string;
   from: string;
+  fromEmail?: string;
   subject: string;
   content: string;
   timestamp: Date;
@@ -300,6 +303,31 @@ export const Summarizer = ({ emails }: SummarizerProps) => {
                       {formatDate(email.timestamp)}
                     </span>
                   </div>
+                </div>
+                
+                <div className="flex items-center gap-2 pt-2 border-t border-border">
+                  <Button size="sm" variant="outline">
+                    <Eye className="mr-1 h-3 w-3" />
+                    Detail
+                  </Button>
+                  <ComposeEmailDialog 
+                    replyTo={email.fromEmail || `${email.from}@email.com`}
+                    subject={`Re: ${email.subject}`}
+                  >
+                    <Button size="sm" variant="outline">
+                      Odpovedať
+                    </Button>
+                  </ComposeEmailDialog>
+                  <EmailTagManager>
+                    <Button size="sm" variant="outline">
+                      <Tag className="mr-1 h-3 w-3" />
+                      Tag
+                    </Button>
+                  </EmailTagManager>
+                  <Button size="sm" variant="ghost">
+                    <Archive className="mr-1 h-3 w-3" />
+                    Archív
+                  </Button>
                 </div>
               </div>
             ))

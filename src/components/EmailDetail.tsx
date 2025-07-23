@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Separator } from "./ui/separator";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
 
 interface Email {
   id: string;
@@ -122,24 +123,46 @@ export const EmailDetail = ({ email }: EmailDetailProps) => {
       {/* Action Buttons */}
       <div className="p-8 border-t border-ai-border bg-card">
         <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <Button className="bg-ai-primary hover:bg-ai-primary/90">
-            <Reply className="mr-2 h-4 w-4" />
-            Odpovedať
-          </Button>
-          <Button variant="outline">
-            <ReplyAll className="mr-2 h-4 w-4" />
-            Odpovedať všetkým
-          </Button>
-          <Button variant="outline">
-            <Forward className="mr-2 h-4 w-4" />
-            Preposlať
-          </Button>
+          <ComposeEmailDialog 
+            replyTo={email.fromEmail}
+            subject={`Re: ${email.subject}`}
+          >
+            <Button className="bg-ai-primary hover:bg-ai-primary/90">
+              <Reply className="mr-2 h-4 w-4" />
+              Odpovedať
+            </Button>
+          </ComposeEmailDialog>
+          <ComposeEmailDialog 
+            replyTo={[email.fromEmail, ...email.to].join(", ")}
+            subject={`Re: ${email.subject}`}
+          >
+            <Button variant="outline">
+              <ReplyAll className="mr-2 h-4 w-4" />
+              Odpovedať všetkým
+            </Button>
+          </ComposeEmailDialog>
+          <ComposeEmailDialog 
+            subject={`Fwd: ${email.subject}`}
+            content={`\n\n---------- Forwarded message ----------\nFrom: ${email.from} <${email.fromEmail}>\nSubject: ${email.subject}\n\n${email.content}`}
+          >
+            <Button variant="outline">
+              <Forward className="mr-2 h-4 w-4" />
+              Preposlať
+            </Button>
+          </ComposeEmailDialog>
           <Separator orientation="vertical" className="h-6" />
-          <Button variant="outline" className="text-ai-success border-ai-success hover:bg-ai-success-light">
+          <Button 
+            variant="outline" 
+            className="text-ai-success border-ai-success hover:bg-ai-success-light"
+            onClick={() => console.log("Email označený ako hotový")}
+          >
             <Check className="mr-2 h-4 w-4" />
             Označiť ako hotové
           </Button>
-          <Button variant="ghost">
+          <Button 
+            variant="ghost"
+            onClick={() => console.log("Email odložený na neskôr")}
+          >
             Odložiť na neskôr
           </Button>
         </div>

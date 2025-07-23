@@ -148,6 +148,10 @@ export const AiTagging = ({ emails }: AiTaggingProps) => {
                   size="sm" 
                   variant="outline" 
                   className="w-full mt-3"
+                  onClick={() => {
+                    // Simulujeme zobrazenie všetkých emailov v kategórii
+                    console.log(`Zobrazujem všetky emaily v kategórii: ${category.name}`);
+                  }}
                 >
                   Zobraz všetky
                 </Button>
@@ -205,15 +209,31 @@ export const AiTagging = ({ emails }: AiTaggingProps) => {
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm">Automatické označovanie</span>
-            <Button size="sm" variant="outline">Zapnuté</Button>
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => console.log("Prepnutie automatického označovania")}
+            >
+              Zapnuté
+            </Button>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">Minimálna presnosť</span>
-            <Button size="sm" variant="outline">85%</Button>
+            <Button 
+              size="sm" 
+              variant="outline"
+              onClick={() => console.log("Nastavenie minimálnej presnosti")}
+            >
+              85%
+            </Button>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm">Vlastné tagy</span>
-            <Button size="sm" className="bg-ai-primary hover:bg-ai-primary/90">
+            <Button 
+              size="sm" 
+              className="bg-ai-primary hover:bg-ai-primary/90"
+              onClick={() => console.log("Správa vlastných tagov")}
+            >
               Spravovať
             </Button>
           </div>

@@ -1,13 +1,17 @@
-import { Mail, Archive, Trash2, Search, Filter } from "lucide-react";
+import { useState } from "react";
+import { Mail, Archive, Trash2, Search, Filter, Reply, Eye, Tag, MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Badge } from "./ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
+import { EmailTagManager } from "./EmailTagManager";
 
 interface Email {
   id: string;
   from: string;
+  fromEmail?: string;
   subject: string;
   content: string;
   timestamp: Date;
@@ -21,12 +25,15 @@ interface AllEmailsProps {
 }
 
 export const AllEmails = ({ emails }: AllEmailsProps) => {
-  const allEmails = [
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterBy, setFilterBy] = useState("all");
+  const [emailList, setEmailList] = useState([
     ...emails,
     // Add more mock emails for demonstration
     {
       id: "3",
       from: "Peter Novák",
+      fromEmail: "peter.novak@company.sk",
       subject: "Týždenný report - výsledky",
       content: "Ahoj, posielajdokument s výsledkami za tento týždeň...",
       timestamp: new Date("2024-01-13T09:15:00"),
@@ -36,6 +43,7 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
     {
       id: "4", 
       from: "Anna Kováčová",
+      fromEmail: "anna.kovacova@finance.sk",
       subject: "Faktúra č. 2024-001",
       content: "V prílohe nájdete faktúru za dodané služby...",
       timestamp: new Date("2024-01-12T16:30:00"),
@@ -46,13 +54,30 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
     {
       id: "5",
       from: "Support Team",
+      fromEmail: "support@company.sk",
       subject: "Systémová údržba - plánovaná odstávka",
       content: "Informujeme Vás o plánovanej údržbe systému...",
       timestamp: new Date("2024-01-11T08:00:00"),
       isRead: true,
       status: "read"
     }
-  ];
+  ]);
+
+  const filteredEmails = emailList.filter(email => {
+    const matchesSearch = email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         email.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         email.content.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesFilter = filterBy === "all" ||
+                         (filterBy === "unread" && !email.isRead) ||
+                         (filterBy === "urgent" && email.isUrgent) ||
+                         (filterBy === "today" && new Date(email.timestamp).toDateString() === new Date().toDateString()) ||
+                         (filterBy === "week" && new Date(email.timestamp) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+    
+    return matchesSearch && matchesFilter;
+  });
+
+  const allEmails = filteredEmails;
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('sk-SK', {
@@ -65,11 +90,26 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
   };
 
   const handleArchive = (emailId: string) => {
+    setEmailList(emails => emails.map(email => 
+      email.id === emailId ? { ...email, status: "archived" } : email
+    ));
     console.log(`Archiving email ${emailId}`);
   };
 
   const handleDelete = (emailId: string) => {
+    setEmailList(emails => emails.filter(email => email.id !== emailId));
     console.log(`Deleting email ${emailId}`);
+  };
+
+  const handleMarkAsRead = (emailId: string) => {
+    setEmailList(emails => emails.map(email => 
+      email.id === emailId ? { ...email, isRead: true } : email
+    ));
+  };
+
+  const handleViewEmail = (emailId: string) => {
+    handleMarkAsRead(emailId);
+    console.log(`Viewing email ${emailId}`);
   };
 
   return (
@@ -91,9 +131,11 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
           <Input 
             placeholder="Hľadať v emailoch..." 
             className="pl-9"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Select>
+        <Select value={filterBy} onValueChange={setFilterBy}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Filtrovať podľa" />
           </SelectTrigger>
@@ -160,22 +202,56 @@ export const AllEmails = ({ emails }: AllEmailsProps) => {
                   <p className="text-sm text-muted-foreground mb-2">Od: {email.from}</p>
                   <p className="text-sm text-muted-foreground line-clamp-2">{email.content}</p>
                 </div>
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex flex-col items-end gap-2 ml-4">
                   <span className="text-xs text-muted-foreground">{formatDate(email.timestamp)}</span>
-                  <Button 
-                    size="sm" 
-                    variant="ghost"
-                    onClick={() => handleArchive(email.id)}
-                  >
-                    <Archive className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="ghost"
-                    onClick={() => handleDelete(email.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => handleViewEmail(email.id)}
+                      title="Zobraziť detail"
+                    >
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <ComposeEmailDialog 
+                      replyTo={email.fromEmail || `${email.from}@email.com`}
+                      subject={`Re: ${email.subject}`}
+                    >
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        title="Odpovedať"
+                      >
+                        <Reply className="h-3 w-3" />
+                      </Button>
+                    </ComposeEmailDialog>
+                    <EmailTagManager>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        title="Pridať tagy"
+                      >
+                        <Tag className="h-3 w-3" />
+                      </Button>
+                    </EmailTagManager>
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => handleArchive(email.id)}
+                      title="Archivovať"
+                    >
+                      <Archive className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => handleDelete(email.id)}
+                      title="Odstrániť"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
