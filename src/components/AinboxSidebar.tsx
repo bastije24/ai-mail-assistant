@@ -435,32 +435,25 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                       <div>
                         <span className="font-medium">Tmavý režim</span>
                         <p className="text-sm text-muted-foreground">
-                          {theme === "dark" ? "Zapnutý" : theme === "light" ? "Vypnutý" : "Automatický (systém)"}
+                          {theme === "dark" ? "Zapnutý - používa tmavé farby" : 
+                           theme === "light" ? "Vypnutý - používa svetlé farby" : 
+                           "Automatický - sleduje systémové nastavenie"}
                         </p>
                       </div>
-                      <div className="flex gap-1">
-                        <Button 
-                          variant={theme === "light" ? "default" : "outline"} 
-                          size="sm"
-                          onClick={() => setTheme("light")}
-                        >
-                          Svetlý
-                        </Button>
-                        <Button 
-                          variant={theme === "dark" ? "default" : "outline"} 
-                          size="sm"
-                          onClick={() => setTheme("dark")}
-                        >
-                          Tmavý
-                        </Button>
-                        <Button 
-                          variant={theme === "system" ? "default" : "outline"} 
-                          size="sm"
-                          onClick={() => setTheme("system")}
-                        >
-                          Auto
-                        </Button>
+                      <Switch 
+                        checked={theme === "dark"} 
+                        onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Sledovať systém</span>
+                        <p className="text-sm text-muted-foreground">Automaticky prepína podľa systémového nastavenia</p>
                       </div>
+                      <Switch 
+                        checked={theme === "system"} 
+                        onCheckedChange={(checked) => setTheme(checked ? "system" : "light")}
+                      />
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="font-medium">Jazyk</span>
