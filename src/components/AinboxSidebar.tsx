@@ -184,13 +184,81 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     Všeobecné nastavenia
                   </h3>
                   <div className="p-6 bg-card rounded-lg border space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Tmavý režim</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Tmavý režim</span>
                       <Button variant="outline" size="sm">Zapnúť</Button>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span>Jazyk</span>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Jazyk</span>
                       <Button variant="outline" size="sm">Slovenčina</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Časové pásmo</span>
+                      <Button variant="outline" size="sm">UTC+1</Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Subscription Management */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    Predplatné
+                  </h3>
+                  <div className="p-6 bg-card rounded-lg border space-y-4">
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Aktuálny plán</span>
+                        <p className="text-sm text-muted-foreground">Premium - €9.99/mesiac</p>
+                      </div>
+                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                        Aktívne
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Zmeniť predplatné</span>
+                      <Button variant="outline" size="sm">Upraviť plán</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Správa platby</span>
+                      <Button variant="outline" size="sm">Spravovať</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium text-red-600">Zrušiť predplatné</span>
+                      <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                        Zrušiť
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Account Security */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Bezpečnosť účtu
+                  </h3>
+                  <div className="p-6 bg-card rounded-lg border space-y-4">
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Zmeniť heslo</span>
+                        <p className="text-sm text-muted-foreground">Naposledy zmenené pred 3 mesiacmi</p>
+                      </div>
+                      <Button variant="outline" size="sm">Zmeniť</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Dvojfaktorové overenie</span>
+                        <p className="text-sm text-muted-foreground">Dodatočná ochrana vašeho účtu</p>
+                      </div>
+                      <Button variant="outline" size="sm">Nastaviť</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Aktívne relácie</span>
+                        <p className="text-sm text-muted-foreground">Spravovať prihlásené zariadenia</p>
+                      </div>
+                      <Button variant="outline" size="sm">Zobraziť</Button>
                     </div>
                   </div>
                 </div>
@@ -202,31 +270,54 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     Notifikácie
                   </h3>
                   <div className="p-6 bg-card rounded-lg border space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Email notifikácie</span>
-                      <Button variant="outline" size="sm">Zapnuté</Button>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Email upozornenia</span>
+                        <p className="text-sm text-muted-foreground">Nové správy a aktualizácie</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="bg-green-50 text-green-700 border-green-200">
+                        Zapnuté
+                      </Button>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span>Urgentné emaily</span>
-                      <Button variant="outline" size="sm">Zapnuté</Button>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Urgentné emaily</span>
+                        <p className="text-sm text-muted-foreground">Okamžité upozornenia na dôležité správy</p>
+                      </div>
+                      <Button variant="outline" size="sm" className="bg-green-50 text-green-700 border-green-200">
+                        Zapnuté
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <span className="font-medium">Týždenné súhrny</span>
+                        <p className="text-sm text-muted-foreground">Prehľad aktivity za týždeň</p>
+                      </div>
+                      <Button variant="outline" size="sm">Vypnuté</Button>
                     </div>
                   </div>
                 </div>
 
-                {/* Privacy & Security */}
+                {/* Data & Privacy */}
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold flex items-center gap-2">
                     <Shield className="h-5 w-5" />
-                    Súkromie & bezpečnosť
+                    Dáta a súkromie
                   </h3>
                   <div className="p-6 bg-card rounded-lg border space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span>Dvojfaktorové overenie</span>
-                      <Button variant="outline" size="sm">Nastaviť</Button>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Stiahnuť moje dáta</span>
+                      <Button variant="outline" size="sm">Stiahnuť</Button>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span>Zmeniť heslo</span>
-                      <Button variant="outline" size="sm">Zmeniť</Button>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium">Vymazať históriu</span>
+                      <Button variant="outline" size="sm">Vymazať</Button>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="font-medium text-red-600">Vymazať účet</span>
+                      <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                        Vymazať
+                      </Button>
                     </div>
                   </div>
                 </div>
