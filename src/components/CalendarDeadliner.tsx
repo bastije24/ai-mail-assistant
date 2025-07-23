@@ -241,7 +241,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-4 gap-6">
         {/* Calendar */}
         <div className="lg:col-span-1 space-y-4">
           <Card>
@@ -366,7 +366,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         </div>
 
         {/* Today's Events (including deadlines) */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center justify-between">
