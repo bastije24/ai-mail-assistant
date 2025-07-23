@@ -13,6 +13,8 @@ import { EmailsList } from "./EmailsList";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { X, Settings } from "lucide-react";
 import { Button } from "./ui/button";
+import { Switch } from "./ui/switch";
+import { useTheme } from "./theme-provider";
 
 // Mock email data
 const mockEmails = [
@@ -68,6 +70,7 @@ export const AinboxManager = () => {
   const [selectedEmail, setSelectedEmail] = useState(mockEmails[0]);
   const [selectedSection, setSelectedSection] = useState("inbox");
   const [fullscreenEmail, setFullscreenEmail] = useState<any>(null);
+  const { theme, setTheme } = useTheme();
 
   const renderMainContent = () => {
     switch (selectedSection) {
@@ -106,6 +109,37 @@ export const AinboxManager = () => {
                   <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">💳 Predplatné</div>
                   <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🌙 Tmavý režim</div>
                   <div className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium">🌍 Jazyk</div>
+                </div>
+              </div>
+
+              {/* Theme Settings */}
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="text-lg font-medium mb-4">🌙 Nastavenia témy</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div>
+                      <span className="font-medium">Tmavý režim</span>
+                      <p className="text-sm text-muted-foreground">
+                        {theme === "dark" ? "Zapnutý - používa tmavé farby" : 
+                         theme === "light" ? "Vypnutý - používa svetlé farby" : 
+                         "Automatický - sleduje systémové nastavenie"}
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={theme === "dark"} 
+                      onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div>
+                      <span className="font-medium">Sledovať systém</span>
+                      <p className="text-sm text-muted-foreground">Automaticky prepína podľa systémového nastavenia</p>
+                    </div>
+                    <Switch 
+                      checked={theme === "system"} 
+                      onCheckedChange={(checked) => setTheme(checked ? "system" : "light")}
+                    />
+                  </div>
                 </div>
               </div>
 
