@@ -11,11 +11,18 @@ import {
   Sparkles,
   Calendar,
   Mail,
-  Trash2
+  Trash2,
+  Settings,
+  User,
+  Bell,
+  Shield,
+  LogOut,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 interface AinboxSidebarProps {
   selectedSection: string;
@@ -67,20 +74,50 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
     <div className="w-80 bg-ai-sidebar border-r border-ai-border flex flex-col">
       {/* Header */}
       <div className="p-6 border-b border-ai-border">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-ai-primary text-primary-foreground text-sm font-medium">
-              MK
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <h3 className="font-medium text-foreground">Martin Kováč</h3>
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 bg-ai-success rounded-full"></div>
-              <span className="text-xs text-muted-foreground">AI pripravený</span>
-            </div>
-          </div>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start p-0 h-auto hover:bg-muted">
+              <div className="flex items-center gap-3 w-full">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback className="bg-ai-primary text-primary-foreground text-sm font-medium">
+                    MK
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 text-left">
+                  <h3 className="font-medium text-foreground">Martin Kováč</h3>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 bg-ai-success rounded-full"></div>
+                    <span className="text-xs text-muted-foreground">AI pripravený</span>
+                  </div>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-64" align="start">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Môj účet</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Nastavenia</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Bell className="mr-2 h-4 w-4" />
+              <span>Notifikácie</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Shield className="mr-2 h-4 w-4" />
+              <span>Súkromie & bezpečnosť</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Odhlásiť sa</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* AI Tools Section */}
