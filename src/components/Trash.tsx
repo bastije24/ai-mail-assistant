@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Trash2, RotateCcw, X } from "lucide-react";
+import { Trash2, RotateCcw, X, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { Switch } from "./ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { useTheme } from "./theme-provider";
 
 interface Email {
   id: string;
@@ -21,6 +23,7 @@ interface TrashProps {
 }
 
 export const Trash = ({ emails }: TrashProps) => {
+  const { theme, setTheme } = useTheme();
   // Mock deleted emails
   const deletedEmails = [
     {
@@ -202,16 +205,52 @@ export const Trash = ({ emails }: TrashProps) => {
         </div>
       )}
 
+      {/* Theme Settings */}
+      <Card className="bg-primary/5 border-primary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Settings className="h-5 w-5" />
+            Nastavenia témy
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="font-medium">Tmavý režim</span>
+              <p className="text-sm text-muted-foreground">
+                {theme === "dark" ? "Zapnutý - používa tmavé farby" : 
+                 theme === "light" ? "Vypnutý - používa svetlé farby" : 
+                 "Automatický - sleduje systémové nastavenie"}
+              </p>
+            </div>
+            <Switch 
+              checked={theme === "dark"} 
+              onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="font-medium">Sledovať systém</span>
+              <p className="text-sm text-muted-foreground">Automaticky prepína podľa systémového nastavenia</p>
+            </div>
+            <Switch 
+              checked={theme === "system"} 
+              onCheckedChange={(checked) => setTheme(checked ? "system" : "light")}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Info Box */}
-      <Card className="bg-blue-50 border-blue-200">
+      <Card className="bg-primary/5 border-primary/20">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <div className="h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
-              <span className="text-xs text-white font-bold">i</span>
+            <div className="h-5 w-5 bg-primary rounded-full flex items-center justify-center mt-0.5">
+              <span className="text-xs text-primary-foreground font-bold">i</span>
             </div>
             <div>
-              <h4 className="font-medium text-blue-900 mb-1">Informácia o koši</h4>
-              <p className="text-sm text-blue-800">
+              <h4 className="font-medium text-foreground mb-1">Informácia o koši</h4>
+              <p className="text-sm text-muted-foreground">
                 Emaily v koši sú automaticky natrvalo vymazané po 30 dňoch. 
                 Môžete ich kedykoľvek obnoviť alebo vymazať natrvalo.
               </p>
