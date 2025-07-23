@@ -9,6 +9,7 @@ import { SendLater } from "./SendLater";
 import { Drafts } from "./Drafts";
 import { AllEmails } from "./AllEmails";
 import { Trash } from "./Trash";
+import { EmailsList } from "./EmailsList";
 
 // Mock email data
 const mockEmails = [
@@ -72,7 +73,7 @@ export const AinboxManager = () => {
       case "ai-assistant": return <AiAssistantPanel email={selectedEmail} />;
       case "send-later": return <SendLater emails={mockEmails} />;
       case "drafts": return <Drafts emails={mockEmails} />;
-      case "all-emails": return <AllEmails emails={mockEmails} />;
+      case "all-emails": return <EmailsList emails={mockEmails} />;
       case "trash": return <Trash emails={mockEmails} />;
       case "inbox": 
       case "archive":
