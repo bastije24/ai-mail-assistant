@@ -8,7 +8,8 @@ import { AiTagging } from "./AiTagging";
 import { SendLater } from "./SendLater";
 import { Drafts } from "./Drafts";
 import { CalendarView } from "./CalendarView";
-import { MoreTools } from "./MoreTools";
+import { AllEmails } from "./AllEmails";
+import { Trash } from "./Trash";
 
 // Mock email data
 const mockEmails = [
@@ -73,7 +74,8 @@ export const AinboxManager = () => {
       case "send-later": return <SendLater emails={mockEmails} />;
       case "drafts": return <Drafts emails={mockEmails} />;
       case "calendar": return <CalendarView emails={mockEmails} />;
-      case "more": return <MoreTools emails={mockEmails} />;
+      case "all-emails": return <AllEmails emails={mockEmails} />;
+      case "trash": return <Trash emails={mockEmails} />;
       case "inbox": 
       case "archive":
       default: return <EmailDetail email={selectedEmail} />;

@@ -9,7 +9,9 @@ import {
   Inbox, 
   Archive,
   Sparkles,
-  Calendar
+  Calendar,
+  Mail,
+  Trash2
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -27,7 +29,6 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
     { id: "ai-tagging", label: "AI Tagging", icon: Tag },
     { id: "ai-assistant", label: "AI Asistent", icon: Bot },
     { id: "calendar", label: "Kalendár", icon: Calendar, count: 8 },
-    { id: "more", label: "More", icon: MoreHorizontal },
   ];
 
   const workflowItems = [
@@ -37,7 +38,9 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
 
   const mainItems = [
     { id: "inbox", label: "Inbox", icon: Inbox, count: 12 },
+    { id: "all-emails", label: "Všetky emaily", icon: Mail, count: 47 },
     { id: "archive", label: "Archív", icon: Archive },
+    { id: "trash", label: "Kôš", icon: Trash2, count: 3 },
   ];
 
   const renderMenuItem = (item: any, isActive: boolean) => (
