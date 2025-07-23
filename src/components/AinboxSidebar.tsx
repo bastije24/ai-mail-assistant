@@ -69,8 +69,8 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
   ];
 
   const mainItems = [
-    { id: "settings", label: "Nastavenia", icon: Settings },
     { id: "trash", label: "Kôš", icon: Trash2, count: 3 },
+    { id: "settings", label: "Nastavenia", icon: Settings },
   ];
 
   const renderMenuItem = (item: any, isActive: boolean) => (
