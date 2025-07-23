@@ -147,15 +147,16 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
 
       {/* Profile Settings Modal */}
       <Dialog open={showProfileModal} onOpenChange={setShowProfileModal}>
-        <DialogContent className="max-w-none w-screen h-screen m-0 p-0 rounded-none">
+        <DialogContent className="max-w-none w-screen h-screen m-0 p-0 rounded-none bg-background">
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-2xl font-semibold">Nastavenia účtu</h2>
+            <div className="flex items-center justify-between p-6 border-b border-border bg-card">
+              <h2 className="text-2xl font-semibold text-foreground">Nastavenia účtu</h2>
               <Button 
                 variant="ghost" 
                 size="icon"
                 onClick={() => setShowProfileModal(false)}
+                className="text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -295,8 +296,8 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                         <Label htmlFor="confirmPassword">Potvrdenie hesla</Label>
                         <Input id="confirmPassword" type="password" placeholder="Zadajte heslo pre potvrdenie" />
                       </div>
-                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-                        <p className="text-sm text-yellow-800">
+                      <div className="p-4 bg-ai-warning-light dark:bg-ai-warning/10 border border-ai-warning/20 rounded-md">
+                        <p className="text-sm text-ai-warning dark:text-ai-warning">
                           <strong>Upozornenie:</strong> Na nový email bude odoslaný verifikačný odkaz. 
                           Pôvodný email bude aktívny až do overenia nového.
                         </p>
@@ -315,7 +316,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                           <p className="font-medium">martin.kovac@email.com</p>
                           <p className="text-sm text-muted-foreground">Overený email</p>
                         </div>
-                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                        <span className="px-3 py-1 bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success rounded-full text-sm">
                           Overený
                         </span>
                       </div>
@@ -383,9 +384,9 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                       </div>
                       
                       {/* Password Requirements */}
-                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
-                        <p className="text-sm font-medium text-blue-900 mb-2">Požiadavky na heslo:</p>
-                        <ul className="text-sm text-blue-800 space-y-1">
+                      <div className="p-4 bg-ai-primary-light/50 dark:bg-ai-primary/10 border border-ai-primary/20 rounded-md">
+                        <p className="text-sm font-medium text-ai-primary dark:text-ai-primary mb-2">Požiadavky na heslo:</p>
+                        <ul className="text-sm text-ai-primary/80 dark:text-ai-primary/80 space-y-1">
                           <li>• Minimálne 8 znakov</li>
                           <li>• Aspoň jedno veľké písmeno</li>
                           <li>• Aspoň jedno malé písmeno</li>
@@ -477,7 +478,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                         <span className="font-medium">Aktuálny plán</span>
                         <p className="text-sm text-muted-foreground">Premium - €9.99/mesiac</p>
                       </div>
-                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                      <span className="px-3 py-1 bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success rounded-full text-sm font-medium">
                         Aktívne
                       </span>
                     </div>
@@ -491,7 +492,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="font-medium text-red-600">Zrušiť predplatné</span>
-                      <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10">
                         Zrušiť
                       </Button>
                     </div>
@@ -541,7 +542,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                         <span className="font-medium">Email upozornenia</span>
                         <p className="text-sm text-muted-foreground">Nové správy a aktualizácie</p>
                       </div>
-                      <Button variant="outline" size="sm" className="bg-green-50 text-green-700 border-green-200">
+                      <Button variant="outline" size="sm" className="bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success border-ai-success/20">
                         Zapnuté
                       </Button>
                     </div>
@@ -550,7 +551,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                         <span className="font-medium">Urgentné emaily</span>
                         <p className="text-sm text-muted-foreground">Okamžité upozornenia na dôležité správy</p>
                       </div>
-                      <Button variant="outline" size="sm" className="bg-green-50 text-green-700 border-green-200">
+                      <Button variant="outline" size="sm" className="bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success border-ai-success/20">
                         Zapnuté
                       </Button>
                     </div>
@@ -581,7 +582,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="font-medium text-red-600">Vymazať účet</span>
-                      <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                      <Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10">
                         Vymazať
                       </Button>
                     </div>

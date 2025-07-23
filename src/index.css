@@ -95,6 +95,21 @@ All colors MUST be HSL.
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
+    /* AI Inbox specific tokens for dark mode */
+    --ai-primary: 220 100% 70%;
+    --ai-primary-light: 220 100% 15%;
+    --ai-success: 142 76% 46%;
+    --ai-success-light: 142 76% 15%;
+    --ai-warning: 38 92% 60%;
+    --ai-warning-light: 48 100% 15%;
+    --ai-sidebar: 222.2 84% 4.9%;
+    --ai-border: 217.2 32.6% 17.5%;
+    
+    /* Email status colors for dark mode */
+    --email-unread: 220 100% 70%;
+    --email-urgent: 0 84% 70%;
+    --email-normal: 215 15% 65%;
+
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
