@@ -15,6 +15,9 @@ import { Calendar } from "./ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
+import { NewMeetingDialog } from "./NewMeetingDialog";
+import { EventDetailDialog } from "./EventDetailDialog";
+import { EditEventDialog } from "./EditEventDialog";
 
 interface Email {
   id: string;
@@ -30,8 +33,7 @@ interface CalendarDeadlinerProps {
 
 export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  
-  const allEvents = [
+  const [events, setEvents] = useState([
     {
       id: "1",
       title: "Stretnutie s klientom",
@@ -81,7 +83,23 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       date: new Date(),
       status: "Dnes"
     }
-  ];
+  ]);
+
+  const handleMeetingCreate = (newMeeting: any) => {
+    setEvents([...events, newMeeting]);
+  };
+
+  const handleEventUpdate = (updatedEvent: any) => {
+    setEvents(events.map(event => event.id === updatedEvent.id ? updatedEvent : event));
+  };
+
+  const createZoomLink = () => {
+    const zoomId = Math.random().toString(36).substring(2, 15);
+    const zoomUrl = `https://zoom.us/j/${zoomId}`;
+    window.open(zoomUrl, '_blank');
+  };
+
+  const allEvents = events;
 
   const todaysEvents = allEvents.filter(event => {
     const eventDate = new Date(event.date);
@@ -180,11 +198,13 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
               <CardTitle>Rýchle akcie</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white">
-                <Plus className="mr-2 h-4 w-4" />
-                Nové stretnutie
-              </Button>
-              <Button variant="outline" className="w-full">
+              <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
+                <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nové stretnutie
+                </Button>
+              </NewMeetingDialog>
+              <Button variant="outline" className="w-full" onClick={createZoomLink}>
                 <Video className="mr-2 h-4 w-4" />
                 Vytvoriť Zoom link
               </Button>
@@ -196,10 +216,12 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Nadchádzajúce udalosti</h2>
-            <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
-              <Plus className="mr-2 h-4 w-4" />
-              Pridať
-            </Button>
+            <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
+              <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
+                <Plus className="mr-2 h-4 w-4" />
+                Pridať
+              </Button>
+            </NewMeetingDialog>
           </div>
 
           <div className="space-y-4">
@@ -248,12 +270,16 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                             Pripojiť sa
                           </Button>
                         )}
-                        <Button size="sm" variant="outline">
-                          Detail
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          Upraviť
-                        </Button>
+                        <EventDetailDialog event={event}>
+                          <Button size="sm" variant="outline">
+                            Detail
+                          </Button>
+                        </EventDetailDialog>
+                        <EditEventDialog event={event} onEventUpdate={handleEventUpdate}>
+                          <Button size="sm" variant="outline">
+                            Upraviť
+                          </Button>
+                        </EditEventDialog>
                       </div>
                     </div>
                   </div>
