@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar as CalendarIcon, Plus, Clock, Users, MapPin, Video } from "lucide-react";
+import { Calendar as CalendarIcon, Plus, Clock, Users, MapPin, Video, ExternalLink } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -21,7 +21,8 @@ export const CalendarView = ({ emails }: CalendarViewProps) => {
       attendees: 5,
       location: "Conference Room A",
       priority: "high",
-      source: "email"
+      source: "email",
+      isOnline: false
     },
     {
       id: "2", 
@@ -29,9 +30,13 @@ export const CalendarView = ({ emails }: CalendarViewProps) => {
       time: "14:00 - 15:00",
       type: "presentation",
       attendees: 8,
-      location: "Zoom Meeting", 
+      location: "Zoom Meeting",
+      onlineLink: "https://zoom.us/j/123456789", 
       priority: "high",
-      source: "calendar"
+      source: "calendar",
+      isOnline: true,
+      meetingId: "123 456 789",
+      passcode: "client2024"
     },
     {
       id: "3",
@@ -39,7 +44,8 @@ export const CalendarView = ({ emails }: CalendarViewProps) => {
       time: "17:00",
       type: "deadline",
       priority: "critical",
-      source: "email"
+      source: "email",
+      isOnline: false
     },
     {
       id: "4",
@@ -49,7 +55,21 @@ export const CalendarView = ({ emails }: CalendarViewProps) => {
       attendees: 2,
       location: "Café Central",
       priority: "low",
-      source: "email"
+      source: "email",
+      isOnline: false
+    },
+    {
+      id: "5",
+      title: "Weekly Standup",
+      time: "08:30 - 09:00",
+      type: "meeting",
+      attendees: 8,
+      location: "Google Meet",
+      onlineLink: "https://meet.google.com/abc-defg-hij",
+      priority: "medium",
+      source: "email", 
+      isOnline: true,
+      meetingId: "abc-defg-hij"
     }
   ];
 
@@ -186,18 +206,52 @@ export const CalendarView = ({ emails }: CalendarViewProps) => {
                     </div>
                   </div>
                   
-                  {(event.location || event.attendees) && (
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      {event.location && (
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
-                          {event.location}
-                        </div>
-                      )}
-                      {event.attendees && (
-                        <div className="flex items-center gap-1">
-                          <Users className="h-3 w-3" />
-                          {event.attendees} účastníkov
+                  {(event.location || event.attendees || event.isOnline) && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        {event.location && (
+                          <div className="flex items-center gap-1">
+                            {event.isOnline ? <Video className="h-3 w-3" /> : <MapPin className="h-3 w-3" />}
+                            {event.location}
+                          </div>
+                        )}
+                        {event.attendees && (
+                          <div className="flex items-center gap-1">
+                            <Users className="h-3 w-3" />
+                            {event.attendees} účastníkov
+                          </div>
+                        )}
+                      </div>
+                      
+                      {event.isOnline && event.onlineLink && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-md p-2">
+                          <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 text-xs font-medium text-blue-800">
+                                <Video className="h-3 w-3" />
+                                Online stretnutie
+                              </div>
+                              {event.meetingId && (
+                                <div className="text-xs text-blue-700">
+                                  ID: {event.meetingId}
+                                </div>
+                              )}
+                              {event.passcode && (
+                                <div className="text-xs text-blue-700">
+                                  Heslo: {event.passcode}
+                                </div>
+                              )}
+                            </div>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="h-6 text-xs px-2 text-blue-600 border-blue-300 hover:bg-blue-100"
+                              onClick={() => window.open(event.onlineLink, '_blank')}
+                            >
+                              <ExternalLink className="h-3 w-3 mr-1" />
+                              Pripojiť
+                            </Button>
+                          </div>
                         </div>
                       )}
                     </div>

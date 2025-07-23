@@ -1,4 +1,4 @@
-import { Clock, AlertTriangle, Calendar, CheckCircle } from "lucide-react";
+import { Clock, AlertTriangle, Calendar, CheckCircle, Video, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -26,7 +26,15 @@ export const Deadliner = ({ emails }: DeadlinerProps) => {
       status: "active",
       description: "Potrebné schválenie posledných zmien pred dodaním v pondelok",
       estimatedTime: "2 hodiny",
-      emailId: "1"
+      emailId: "1",
+      meetingInfo: {
+        isOnline: true,
+        platform: "Zoom",
+        link: "https://zoom.us/j/987654321",
+        meetingId: "987 654 321",
+        passcode: "final2024",
+        scheduledTime: "2024-01-19T16:00:00"
+      }
     },
     {
       id: "2",
@@ -37,7 +45,14 @@ export const Deadliner = ({ emails }: DeadlinerProps) => {
       status: "active",
       description: "Odpoveď na návrh termínov stretnutia",
       estimatedTime: "15 minút",
-      emailId: "2"
+      emailId: "2",
+      meetingInfo: {
+        isOnline: true,
+        platform: "Google Meet",
+        link: "https://meet.google.com/xyz-abcd-efg",
+        meetingId: "xyz-abcd-efg",
+        scheduledTime: "2024-01-23T14:00:00"
+      }
     },
     {
       id: "3",
@@ -140,6 +155,41 @@ export const Deadliner = ({ emails }: DeadlinerProps) => {
                   </div>
                   
                   <p className="text-sm text-muted-foreground mb-3">{deadline.description}</p>
+                  
+                  {deadline.meetingInfo && deadline.meetingInfo.isOnline && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 text-sm font-medium text-blue-800">
+                            <Video className="h-4 w-4" />
+                            {deadline.meetingInfo.platform} stretnutie
+                          </div>
+                          <div className="text-xs text-blue-700">
+                            ID: {deadline.meetingInfo.meetingId}
+                          </div>
+                          {deadline.meetingInfo.passcode && (
+                            <div className="text-xs text-blue-700">
+                              Heslo: {deadline.meetingInfo.passcode}
+                            </div>
+                          )}
+                          {deadline.meetingInfo.scheduledTime && (
+                            <div className="text-xs text-blue-700">
+                              Čas: {new Date(deadline.meetingInfo.scheduledTime).toLocaleString('sk-SK')}
+                            </div>
+                          )}
+                        </div>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="text-blue-600 border-blue-300 hover:bg-blue-100"
+                          onClick={() => window.open(deadline.meetingInfo.link, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4 mr-1" />
+                          Pripojiť
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground">
