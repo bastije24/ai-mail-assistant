@@ -32,6 +32,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useTheme } from "./theme-provider";
 
 interface AinboxSidebarProps {
   selectedSection: string;
@@ -45,6 +46,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
   const [changingEmail, setChangingEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const { theme, setTheme } = useTheme();
   const aiTools = [
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
     { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
@@ -160,8 +162,8 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
             </div>
             
             {/* Settings Content */}
-            <div className="flex-1 overflow-auto p-6">
-              <div className="max-w-4xl mx-auto space-y-8">
+            <div className="flex-1 overflow-auto">
+              <div className="max-w-4xl mx-auto p-6 space-y-8">
                 {/* Profile Section */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -422,8 +424,35 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                   </h3>
                   <div className="p-6 bg-card rounded-lg border space-y-4">
                     <div className="flex items-center justify-between py-2">
-                      <span className="font-medium">Tmavý režim</span>
-                      <Button variant="outline" size="sm">Zapnúť</Button>
+                      <div>
+                        <span className="font-medium">Tmavý režim</span>
+                        <p className="text-sm text-muted-foreground">
+                          {theme === "dark" ? "Zapnutý" : theme === "light" ? "Vypnutý" : "Automatický (systém)"}
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        <Button 
+                          variant={theme === "light" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setTheme("light")}
+                        >
+                          Svetlý
+                        </Button>
+                        <Button 
+                          variant={theme === "dark" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setTheme("dark")}
+                        >
+                          Tmavý
+                        </Button>
+                        <Button 
+                          variant={theme === "system" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => setTheme("system")}
+                        >
+                          Auto
+                        </Button>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between py-2">
                       <span className="font-medium">Jazyk</span>
