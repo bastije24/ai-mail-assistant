@@ -1,4 +1,4 @@
-import { AinboxManager } from "../components/AinboxManager";
+import { AinboxManager } from "@/features/core";
 
 const Index = () => {
   return <AinboxManager />;
