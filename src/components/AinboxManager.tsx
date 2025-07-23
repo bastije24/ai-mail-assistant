@@ -69,10 +69,13 @@ export const AinboxManager = () => {
       case "summarizer": return <Summarizer emails={mockEmails} />;
       case "deadliner": return <Deadliner emails={mockEmails} />;
       case "ai-tagging": return <AiTagging emails={mockEmails} />;
+      case "ai-assistant": return <AiAssistantPanel email={selectedEmail} />;
       case "send-later": return <SendLater emails={mockEmails} />;
       case "drafts": return <Drafts emails={mockEmails} />;
       case "calendar": return <CalendarView emails={mockEmails} />;
       case "more": return <MoreTools emails={mockEmails} />;
+      case "inbox": 
+      case "archive":
       default: return <EmailDetail email={selectedEmail} />;
     }
   };
