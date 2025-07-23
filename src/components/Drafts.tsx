@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { FileEdit, Clock, Save, Trash2, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { ComposeEmailDialog } from "./ComposeEmailDialog";
 
 interface Email {
   id: string;
@@ -17,7 +19,7 @@ interface DraftsProps {
 }
 
 export const Drafts = ({ emails }: DraftsProps) => {
-  const drafts = [
+  const [drafts, setDrafts] = useState([
     {
       id: "1",
       to: "jan.novak@firma.sk",
@@ -39,7 +41,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
       wordCount: 89,
       status: "draft",
       previewText: "Ahoj team, na základe včerajšieho retrospective-u pripravujem plán na budúci sprint. Hlavné priority budú...",
-      category: "Plánование",
+      category: "Plánování",
       priority: "Stredná"
     },
     {
@@ -66,7 +68,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
       category: "Návrh",
       priority: "Vysoká"
     }
-  ];
+  ]);
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -118,6 +120,37 @@ export const Drafts = ({ emails }: DraftsProps) => {
 
   const getTotalWords = () => drafts.reduce((sum, draft) => sum + draft.wordCount, 0);
 
+  const handleContinue = (draftId: string) => {
+    const draft = drafts.find(d => d.id === draftId);
+    if (draft) {
+      console.log(`Opening draft ${draftId} for editing:`, draft);
+      // Tu by sa otvoril editor pre úpravu draftu
+    }
+  };
+
+  const handleSend = (draftId: string) => {
+    const draft = drafts.find(d => d.id === draftId);
+    if (draft) {
+      setDrafts(prev => prev.filter(d => d.id !== draftId));
+      console.log(`Draft ${draftId} sent successfully:`, draft);
+      // Tu by sa draft odoslal ako hotový email
+    }
+  };
+
+  const handleSave = (draftId: string) => {
+    setDrafts(prev => prev.map(draft => 
+      draft.id === draftId 
+        ? { ...draft, lastModified: new Date(), status: "draft" }
+        : draft
+    ));
+    console.log(`Draft ${draftId} saved`);
+  };
+
+  const handleDelete = (draftId: string) => {
+    setDrafts(prev => prev.filter(d => d.id !== draftId));
+    console.log(`Draft ${draftId} deleted`);
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -166,10 +199,6 @@ export const Drafts = ({ emails }: DraftsProps) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-foreground">Moje drafty</h2>
-          <Button className="bg-ai-primary hover:bg-ai-primary/90">
-            <FileEdit className="mr-2 h-4 w-4" />
-            Nový draft
-          </Button>
         </div>
 
         <div className="space-y-3">
@@ -227,7 +256,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
                     <Button 
                       size="sm" 
                       className="bg-ai-primary hover:bg-ai-primary/90"
-                      onClick={() => console.log(`Pokračujem v úprave draftu ${draft.id}`)}
+                      onClick={() => handleContinue(draft.id)}
                     >
                       <FileEdit className="mr-2 h-3 w-3" />
                       Pokračovať
@@ -235,7 +264,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      onClick={() => console.log(`Odosielam draft ${draft.id}`)}
+                      onClick={() => handleSend(draft.id)}
                     >
                       <Send className="mr-2 h-3 w-3" />
                       Odoslať
@@ -243,7 +272,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      onClick={() => console.log(`Ukladám draft ${draft.id}`)}
+                      onClick={() => handleSave(draft.id)}
                     >
                       <Save className="mr-2 h-3 w-3" />
                       Uložiť
@@ -252,7 +281,7 @@ export const Drafts = ({ emails }: DraftsProps) => {
                       size="sm" 
                       variant="ghost" 
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      onClick={() => console.log(`Mažem draft ${draft.id}`)}
+                      onClick={() => handleDelete(draft.id)}
                     >
                       <Trash2 className="mr-2 h-3 w-3" />
                       Zmazať
