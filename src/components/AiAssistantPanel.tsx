@@ -9,11 +9,15 @@ import {
   BarChart3, 
   Users,
   AlertCircle,
-  Calendar
+  Calendar,
+  Send,
+  Sparkles
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 import { ComposeEmailReply } from "./ComposeEmailReply";
 
 interface Email {
@@ -36,6 +40,8 @@ interface AiAssistantPanelProps {
 export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
   const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const [selectedConceptId, setSelectedConceptId] = useState<string>();
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [aiResponses, setAiResponses] = useState<string[]>([]);
   const aiConcepts = [
     {
       id: "A",
@@ -66,6 +72,14 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
       color: "bg-gray-50 text-gray-700 border-gray-200"
     }
   ];
+
+  const handleCustomPrompt = () => {
+    if (!customPrompt.trim()) return;
+    
+    const mockResponse = `AI odpoveď na: "${customPrompt}" - Analýza emailu ukázala...`;
+    setAiResponses(prev => [...prev, mockResponse]);
+    setCustomPrompt("");
+  };
 
   const quickActions = [
     { label: "Rýchla odpoveď", icon: Reply, variant: "default" as const },
@@ -146,6 +160,53 @@ export const AiAssistantPanel = ({ email }: AiAssistantPanelProps) => {
             </Card>
           ))}
         </div>
+      </div>
+
+      {/* Custom AI Prompt */}
+      <div className="p-4 border-t border-ai-border">
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">
+          Vlastný AI Prompt
+        </h3>
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="custom-prompt" className="text-xs text-muted-foreground">
+              Napíšte svoj vlastný príkaz pre AI
+            </Label>
+            <Textarea
+              id="custom-prompt"
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              placeholder="Napríklad: Analyzuj tone tohto emailu, Vytvor formálnu odpoveď, Sumarizuj kľúčové body..."
+              rows={3}
+              className="text-sm resize-none"
+            />
+          </div>
+          <Button 
+            onClick={handleCustomPrompt}
+            disabled={!customPrompt.trim()}
+            size="sm" 
+            className="w-full bg-ai-primary hover:bg-ai-primary/90"
+          >
+            <Sparkles className="mr-2 h-4 w-4" />
+            Spracovať AI prompt
+          </Button>
+        </div>
+
+        {/* AI Responses */}
+        {aiResponses.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <h4 className="text-xs font-medium text-muted-foreground">AI Odpovede:</h4>
+            <div className="max-h-32 overflow-y-auto space-y-2">
+              {aiResponses.map((response, index) => (
+                <Card key={index} className="bg-ai-primary-light border-ai-primary/20">
+                  <CardContent className="p-3">
+                    <p className="text-xs text-foreground leading-relaxed">{response}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}
