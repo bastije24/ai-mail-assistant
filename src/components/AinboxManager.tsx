@@ -75,8 +75,44 @@ export const AinboxManager = () => {
       case "drafts": return <Drafts emails={mockEmails} />;
       case "all-emails": return <EmailsList emails={mockEmails} />;
       case "trash": return <Trash emails={mockEmails} />;
+      case "archive": return (
+        <div className="flex-1 p-6">
+          <h2 className="text-2xl font-bold mb-6">Archív - Spracované emaily</h2>
+          <div className="space-y-4">
+            {mockEmails.filter(email => email.status === "read").map((email) => (
+              <div key={email.id} className="p-4 bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-1">{email.subject}</h3>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Od: <span className="font-medium">{email.from}</span> ({email.fromEmail})
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      {email.timestamp.toLocaleDateString()} {email.timestamp.toLocaleTimeString()}
+                    </span>
+                    <div className="flex gap-2">
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        Spracovaný
+                      </span>
+                      {email.isUrgent && (
+                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                          Urgentný
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {email.content.substring(0, 150)}...
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
       case "inbox": 
-      case "archive":
       default: return <EmailDetail email={selectedEmail} />;
     }
   };
