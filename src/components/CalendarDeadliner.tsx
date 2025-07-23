@@ -14,7 +14,6 @@ import { Calendar } from "./ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface Email {
   id: string;
@@ -31,8 +30,9 @@ interface CalendarDeadlinerProps {
 export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   
-  // Calendar events data
-  const events = [
+  // Combined events and deadlines data
+  const allEvents = [
+    // Regular calendar events
     {
       id: "1",
       title: "Team Meeting - Sprint Planning",
@@ -42,7 +42,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       location: "Conference Room A",
       priority: "high",
       source: "email",
-      isOnline: false
+      isOnline: false,
+      date: new Date("2024-01-15T09:00:00")
     },
     {
       id: "2", 
@@ -56,16 +57,31 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       source: "calendar",
       isOnline: true,
       meetingId: "123 456 789",
-      passcode: "client2024"
+      passcode: "client2024",
+      date: new Date("2024-01-15T14:00:00")
     },
+    // Deadlines integrated as events
     {
       id: "3",
-      title: "Project Deadline",
+      title: "Finálne materiály pre klienta",
       time: "17:00",
       type: "deadline",
       priority: "critical",
       source: "email",
-      isOnline: false
+      isOnline: false,
+      date: new Date("2024-01-19T17:00:00"),
+      from: "Jan Novák",
+      description: "Potrebné schválenie posledných zmien pred dodaním v pondelok",
+      estimatedTime: "2 hodiny",
+      status: "active",
+      meetingInfo: {
+        isOnline: true,
+        platform: "Zoom",
+        link: "https://zoom.us/j/987654321",
+        meetingId: "987 654 321",
+        passcode: "final2024",
+        scheduledTime: "2024-01-19T16:00:00"
+      }
     },
     {
       id: "4",
@@ -76,7 +92,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       location: "Café Central",
       priority: "low",
       source: "email",
-      isOnline: false
+      isOnline: false,
+      date: new Date("2024-01-15T11:00:00")
     },
     {
       id: "5",
@@ -89,58 +106,23 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       priority: "medium",
       source: "email", 
       isOnline: true,
-      meetingId: "abc-defg-hij"
-    }
-  ];
-
-  const upcomingEvents = [
-    {
-      id: "5",
-      title: "Quarterly Review",
-      date: new Date("2024-01-17T10:00:00"),
-      type: "meeting",
-      priority: "high"
+      meetingId: "abc-defg-hij",
+      date: new Date("2024-01-15T08:30:00")
     },
+    // More deadlines
     {
       id: "6",
-      title: "Product Launch",
-      date: new Date("2024-01-20T09:00:00"),
-      type: "deadline", 
-      priority: "critical"
-    }
-  ];
-
-  // Deadlines data
-  const deadlines = [
-    {
-      id: "1",
-      title: "Finálne materiály pre klienta",
-      from: "Jan Novák",
-      dueDate: new Date("2024-01-19T17:00:00"),
-      priority: "Kritická",
-      status: "active",
-      description: "Potrebné schválenie posledných zmien pred dodaním v pondelok",
-      estimatedTime: "2 hodiny",
-      emailId: "1",
-      meetingInfo: {
-        isOnline: true,
-        platform: "Zoom",
-        link: "https://zoom.us/j/987654321",
-        meetingId: "987 654 321",
-        passcode: "final2024",
-        scheduledTime: "2024-01-19T16:00:00"
-      }
-    },
-    {
-      id: "2",
       title: "Potvrdenie stretnutia",
-      from: "Mária Svobodová", 
-      dueDate: new Date("2024-01-20T10:00:00"),
-      priority: "Vysoká",
-      status: "active",
+      time: "10:00",
+      type: "deadline",
+      priority: "high",
+      source: "email",
+      isOnline: false,
+      date: new Date("2024-01-20T10:00:00"),
+      from: "Mária Svobodová",
       description: "Odpoveď na návrh termínov stretnutia",
       estimatedTime: "15 minút",
-      emailId: "2",
+      status: "active",
       meetingInfo: {
         isOnline: true,
         platform: "Google Meet",
@@ -150,30 +132,48 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       }
     },
     {
-      id: "3",
+      id: "7",
       title: "Mesačná správa",
+      time: "23:59",
+      type: "deadline",
+      priority: "medium",
+      source: "email",
+      isOnline: false,
+      date: new Date("2024-01-25T23:59:00"),
       from: "Peter Novotný",
-      dueDate: new Date("2024-01-25T23:59:00"),
-      priority: "Stredná", 
-      status: "upcoming",
       description: "Príprava mesačného reportu pre management",
       estimatedTime: "4 hodiny",
-      emailId: "3"
-    },
-    {
-      id: "4",
-      title: "Prezentácia produktu",
-      from: "Anna Krejčová",
-      dueDate: new Date("2024-01-15T14:00:00"),
-      priority: "Dokončené",
-      status: "completed", 
-      description: "Úspešne prezentované včera",
-      estimatedTime: "Dokončené",
-      emailId: "4"
+      status: "upcoming"
     }
   ];
 
-  // Calendar helper functions
+  const upcomingEvents = [
+    {
+      id: "8",
+      title: "Quarterly Review",
+      date: new Date("2024-01-17T10:00:00"),
+      type: "meeting",
+      priority: "high"
+    },
+    {
+      id: "9",
+      title: "Product Launch Deadline",
+      date: new Date("2024-01-20T09:00:00"),
+      type: "deadline", 
+      priority: "critical"
+    }
+  ];
+
+  // Filter today's events (including deadlines)
+  const todaysEvents = allEvents.filter(event => {
+    const today = selectedDate || new Date();
+    const eventDate = new Date(event.date);
+    return eventDate.toDateString() === today.toDateString();
+  }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  // Get dates with events for calendar highlighting
+  const datesWithEvents = allEvents.map(event => new Date(event.date.toDateString()));
+
   const getEventIcon = (type: string) => {
     switch (type) {
       case "meeting": return <Users className="h-3 w-3" />;
@@ -207,21 +207,11 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
     }
   };
 
-  // Deadlines helper functions
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "Kritická": return "bg-red-100 text-red-800 border-red-200";
-      case "Vysoká": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "Stredná": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "Dokončené": return "bg-green-100 text-green-800 border-green-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
-  const getStatusIcon = (status: string, priority: string) => {
+  const getStatusIcon = (type: string, status?: string, priority?: string) => {
     if (status === "completed") return <CheckCircle className="h-4 w-4 text-green-600" />;
-    if (priority === "Kritická") return <AlertTriangle className="h-4 w-4 text-red-600" />;
-    return <Clock className="h-4 w-4 text-orange-600" />;
+    if (type === "deadline" && priority === "critical") return <AlertTriangle className="h-4 w-4 text-red-600" />;
+    if (type === "deadline") return <Clock className="h-4 w-4 text-orange-600" />;
+    return getEventIcon(type);
   };
 
   const formatDeadline = (date: Date) => {
@@ -239,10 +229,6 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
     });
   };
 
-  const activeDeadlines = deadlines.filter(d => d.status === "active");
-  const upcomingDeadlines = deadlines.filter(d => d.status === "upcoming");
-  const completedDeadlines = deadlines.filter(d => d.status === "completed");
-
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -255,276 +241,156 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         </div>
       </div>
 
-      <Tabs defaultValue="calendar" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="calendar">Kalendár</TabsTrigger>
-          <TabsTrigger value="deadlines">Deadliny</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="calendar" className="space-y-6">
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Calendar */}
-            <div className="lg:col-span-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base">Kalendár</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="rounded-md border-0"
-                    modifiers={{
-                      hasEvents: [
-                        new Date("2024-01-15"),
-                        new Date("2024-01-16"), 
-                        new Date("2024-01-17"),
-                        new Date("2024-01-20")
-                      ]
-                    }}
-                    modifiersStyles={{
-                      hasEvents: {
-                        backgroundColor: "hsl(var(--ai-primary-light))",
-                        color: "hsl(var(--ai-primary))",
-                        fontWeight: "bold"
-                      }
-                    }}
-                  />
-                </CardContent>
-              </Card>
-
-              {/* Quick Add */}
-              <Card className="mt-4">
-                <CardContent className="p-4">
-                  <Button className="w-full bg-ai-primary hover:bg-ai-primary/90">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Pridať udalosť
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Today's Events */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center justify-between">
-                    Dnes - {selectedDate?.toLocaleDateString('sk-SK', { day: 'numeric', month: 'long' })}
-                    <Badge variant="secondary">{events.length} udalostí</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {events.map((event) => (
-                    <div key={event.id} className={`p-3 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-start gap-2">
-                          {getEventIcon(event.type)}
-                          <div>
-                            <h3 className="font-medium text-foreground text-sm">{event.title}</h3>
-                            <p className="text-xs text-muted-foreground">{event.time}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {getPriorityBadge(event.priority)}
-                          <Badge variant="outline" className="text-xs">
-                            {event.source === "email" ? "Email" : "Kalendár"}
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      {(event.location || event.attendees || event.isOnline) && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            {event.location && (
-                              <div className="flex items-center gap-1">
-                                {event.isOnline ? <Video className="h-3 w-3" /> : <MapPin className="h-3 w-3" />}
-                                {event.location}
-                              </div>
-                            )}
-                            {event.attendees && (
-                              <div className="flex items-center gap-1">
-                                <Users className="h-3 w-3" />
-                                {event.attendees} účastníkov
-                              </div>
-                            )}
-                          </div>
-                          
-                          {event.isOnline && event.onlineLink && (
-                            <div className="bg-blue-50 border border-blue-200 rounded-md p-2">
-                              <div className="flex items-center justify-between">
-                                <div className="space-y-1">
-                                  <div className="flex items-center gap-2 text-xs font-medium text-blue-800">
-                                    <Video className="h-3 w-3" />
-                                    Online stretnutie
-                                  </div>
-                                  {event.meetingId && (
-                                    <div className="text-xs text-blue-700">
-                                      ID: {event.meetingId}
-                                    </div>
-                                  )}
-                                  {event.passcode && (
-                                    <div className="text-xs text-blue-700">
-                                      Heslo: {event.passcode}
-                                    </div>
-                                  )}
-                                </div>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  className="h-6 text-xs px-2 text-blue-600 border-blue-300 hover:bg-blue-100"
-                                  onClick={() => window.open(event.onlineLink, '_blank')}
-                                >
-                                  <ExternalLink className="h-3 w-3 mr-1" />
-                                  Pripojiť
-                                </Button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Upcoming Events */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Calendar */}
+        <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Nadchádzajúce udalosti</CardTitle>
+              <CardTitle className="text-base">Kalendár</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
-                {upcomingEvents.map((event) => (
-                  <div key={event.id} className={`p-4 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-2">
-                        {getEventIcon(event.type)}
-                        <div>
-                          <h3 className="font-medium text-foreground text-sm mb-1">{event.title}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {event.date.toLocaleDateString('sk-SK', { 
-                              day: 'numeric', 
-                              month: 'short',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-                      {getPriorityBadge(event.priority)}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                className="rounded-md border-0"
+                modifiers={{
+                  hasEvents: datesWithEvents
+                }}
+                modifiersStyles={{
+                  hasEvents: {
+                    backgroundColor: "hsl(var(--ai-primary-light))",
+                    color: "hsl(var(--ai-primary))",
+                    fontWeight: "bold"
+                  }
+                }}
+              />
             </CardContent>
           </Card>
 
-          {/* AI Calendar Insights */}
-          <Card className="bg-ai-primary-light border-ai-primary/20">
+          {/* Quick Add */}
+          <Card className="mt-4">
+            <CardContent className="p-4">
+              <Button className="w-full bg-ai-primary hover:bg-ai-primary/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Pridať udalosť
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Today's Events (including deadlines) */}
+        <div className="lg:col-span-2">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <div className="h-6 w-6 bg-ai-primary rounded-full flex items-center justify-center">
-                  <span className="text-xs text-white font-medium">AI</span>
-                </div>
-                Kalendárne insights
+              <CardTitle className="text-base flex items-center justify-between">
+                {selectedDate?.toLocaleDateString('sk-SK', { day: 'numeric', month: 'long' })}
+                <Badge variant="secondary">{todaysEvents.length} udalostí</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium">Dnešný prehľad</h4>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• 4 stretnutia naplánované</li>
-                    <li>• 1 kritický deadline</li>
-                    <li>• Najvyťaženejší čas: 14:00-16:00</li>
-                  </ul>
+              {todaysEvents.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <CalendarIcon className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>Žiadne udalosti na tento deň</p>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium">AI odporúčania</h4>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
-                    <li>• Pridať 15min buffer pred prezentáciou</li>
-                    <li>• Pripraviť materiály pre client meeting</li>
-                    <li>• Potvrdiť účasť na team planningu</li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="deadlines" className="space-y-6">
-          {/* Urgent Deadlines */}
-          {activeDeadlines.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-lg font-medium text-foreground flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-red-500" />
-                Urgentné termíny ({activeDeadlines.length})
-              </h2>
-              <div className="space-y-3">
-                {activeDeadlines.map((deadline) => (
-                  <Card key={deadline.id} className="border-l-4 border-l-red-500 hover:shadow-sm transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-start gap-3">
-                          {getStatusIcon(deadline.status, deadline.priority)}
-                          <div>
-                            <h3 className="font-medium text-foreground mb-1">{deadline.title}</h3>
-                            <p className="text-sm text-muted-foreground">Od: {deadline.from}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={getPriorityColor(deadline.priority)}>
-                            {deadline.priority}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {formatDeadline(deadline.dueDate)}
-                          </Badge>
+              ) : (
+                todaysEvents.map((event) => (
+                  <div key={event.id} className={`p-4 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
+                        {getStatusIcon(event.type, event.status, event.priority)}
+                        <div>
+                          <h3 className="font-medium text-foreground text-sm">{event.title}</h3>
+                          <p className="text-xs text-muted-foreground">{event.time}</p>
+                          {event.from && (
+                            <p className="text-xs text-muted-foreground">Od: {event.from}</p>
+                          )}
                         </div>
                       </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-3">{deadline.description}</p>
-                      
-                      {deadline.meetingInfo && deadline.meetingInfo.isOnline && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-sm font-medium text-blue-800">
-                                <Video className="h-4 w-4" />
-                                {deadline.meetingInfo.platform} stretnutie
-                              </div>
-                              <div className="text-xs text-blue-700">
-                                ID: {deadline.meetingInfo.meetingId}
-                              </div>
-                              {deadline.meetingInfo.passcode && (
-                                <div className="text-xs text-blue-700">
-                                  Heslo: {deadline.meetingInfo.passcode}
-                                </div>
-                              )}
-                              {deadline.meetingInfo.scheduledTime && (
-                                <div className="text-xs text-blue-700">
-                                  Čas: {new Date(deadline.meetingInfo.scheduledTime).toLocaleString('sk-SK')}
-                                </div>
-                              )}
+                      <div className="flex items-center gap-2">
+                        {getPriorityBadge(event.priority)}
+                        <Badge variant="outline" className="text-xs">
+                          {event.type === "deadline" ? "Deadline" : event.source === "email" ? "Email" : "Kalendár"}
+                        </Badge>
+                        {event.type === "deadline" && (
+                          <Badge variant="outline" className="text-xs">
+                            {formatDeadline(event.date)}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {event.description && (
+                      <p className="text-sm text-muted-foreground mb-3">{event.description}</p>
+                    )}
+                    
+                    {(event.location || event.attendees || event.isOnline) && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          {event.location && (
+                            <div className="flex items-center gap-1">
+                              {event.isOnline ? <Video className="h-3 w-3" /> : <MapPin className="h-3 w-3" />}
+                              {event.location}
                             </div>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              className="text-blue-600 border-blue-300 hover:bg-blue-100"
-                              onClick={() => window.open(deadline.meetingInfo.link, '_blank')}
-                            >
-                              <ExternalLink className="h-4 w-4 mr-1" />
-                              Pripojiť
-                            </Button>
-                          </div>
+                          )}
+                          {event.attendees && (
+                            <div className="flex items-center gap-1">
+                              <Users className="h-3 w-3" />
+                              {event.attendees} účastníkov
+                            </div>
+                          )}
+                          {event.estimatedTime && (
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {event.estimatedTime}
+                            </div>
+                          )}
                         </div>
-                      )}
-                      
-                      <div className="flex items-center justify-between">
+                        
+                        {((event.isOnline && event.onlineLink) || (event.meetingInfo && event.meetingInfo.isOnline)) && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 text-sm font-medium text-blue-800">
+                                  <Video className="h-4 w-4" />
+                                  {event.meetingInfo?.platform || "Online"} stretnutie
+                                </div>
+                                {(event.meetingId || event.meetingInfo?.meetingId) && (
+                                  <div className="text-xs text-blue-700">
+                                    ID: {event.meetingId || event.meetingInfo?.meetingId}
+                                  </div>
+                                )}
+                                {(event.passcode || event.meetingInfo?.passcode) && (
+                                  <div className="text-xs text-blue-700">
+                                    Heslo: {event.passcode || event.meetingInfo?.passcode}
+                                  </div>
+                                )}
+                                {event.meetingInfo?.scheduledTime && (
+                                  <div className="text-xs text-blue-700">
+                                    Čas: {new Date(event.meetingInfo.scheduledTime).toLocaleString('sk-SK')}
+                                  </div>
+                                )}
+                              </div>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="text-blue-600 border-blue-300 hover:bg-blue-100"
+                                onClick={() => window.open(event.onlineLink || event.meetingInfo?.link, '_blank')}
+                              >
+                                <ExternalLink className="h-4 w-4 mr-1" />
+                                Pripojiť
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {event.type === "deadline" && (
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t">
                         <span className="text-xs text-muted-foreground">
-                          Odhadovaný čas: {deadline.estimatedTime}
+                          Deadline: {event.estimatedTime}
                         </span>
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline">
@@ -536,90 +402,78 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                           </Button>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
+                    )}
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
-          {/* Upcoming Deadlines */}
-          {upcomingDeadlines.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-lg font-medium text-foreground">
-                Nadchádzajúce termíny ({upcomingDeadlines.length})
-              </h2>
-              <div className="space-y-3">
-                {upcomingDeadlines.map((deadline) => (
-                  <Card key={deadline.id} className="hover:shadow-sm transition-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-start gap-3">
-                          {getStatusIcon(deadline.status, deadline.priority)}
-                          <div>
-                            <h3 className="font-medium text-foreground mb-1">{deadline.title}</h3>
-                            <p className="text-sm text-muted-foreground">Od: {deadline.from}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge className={getPriorityColor(deadline.priority)}>
-                            {deadline.priority}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {formatDeadline(deadline.dueDate)}
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-3">{deadline.description}</p>
-                      
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          Odhadovaný čas: {deadline.estimatedTime}
-                        </span>
-                        <Button size="sm" variant="outline">
-                          Zobraz email
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+      {/* Upcoming Events */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Nadchádzajúce udalosti</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-4">
+            {upcomingEvents.map((event) => (
+              <div key={event.id} className={`p-4 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-2">
+                    {getEventIcon(event.type)}
+                    <div>
+                      <h3 className="font-medium text-foreground text-sm mb-1">{event.title}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {event.date.toLocaleDateString('sk-SK', { 
+                          day: 'numeric', 
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  {getPriorityBadge(event.priority)}
+                </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-          {/* Completed */}
-          {completedDeadlines.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-lg font-medium text-muted-foreground">
-                Dokončené ({completedDeadlines.length})
-              </h2>
-              <div className="space-y-2">
-                {completedDeadlines.map((deadline) => (
-                  <Card key={deadline.id} className="opacity-75">
-                    <CardContent className="p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <div>
-                            <h3 className="text-sm font-medium text-muted-foreground line-through">
-                              {deadline.title}
-                            </h3>
-                            <p className="text-xs text-muted-foreground">Od: {deadline.from}</p>
-                          </div>
-                        </div>
-                        <Badge className={getPriorityColor(deadline.priority)}>
-                          Dokončené
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+      {/* AI Calendar Insights */}
+      <Card className="bg-ai-primary-light border-ai-primary/20">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <div className="h-6 w-6 bg-ai-primary rounded-full flex items-center justify-center">
+              <span className="text-xs text-white font-medium">AI</span>
             </div>
-          )}
-        </TabsContent>
-      </Tabs>
+            Kalendárne insights
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium">Dnešný prehľad</h4>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>• {todaysEvents.filter(e => e.type !== "deadline").length} stretnutí naplánovaných</li>
+                <li>• {todaysEvents.filter(e => e.type === "deadline").length} deadlineov</li>
+                <li>• Najvyťaženejší čas: 14:00-16:00</li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium">AI odporúčania</h4>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                <li>• Pripraviť materiály pre deadliny</li>
+                <li>• Pridať 15min buffer pred prezentáciou</li>
+                <li>• Potvrdiť účasť na stretnutiach</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
