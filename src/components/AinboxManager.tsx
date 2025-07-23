@@ -3,11 +3,10 @@ import { AinboxSidebar } from "./AinboxSidebar";
 import { EmailDetail } from "./EmailDetail";
 import { AiAssistantPanel } from "./AiAssistantPanel";
 import { Summarizer } from "./Summarizer";
-import { Deadliner } from "./Deadliner";
+import { CalendarDeadliner } from "./CalendarDeadliner";
 import { AiTagging } from "./AiTagging";
 import { SendLater } from "./SendLater";
 import { Drafts } from "./Drafts";
-import { CalendarView } from "./CalendarView";
 import { AllEmails } from "./AllEmails";
 import { Trash } from "./Trash";
 
@@ -68,12 +67,11 @@ export const AinboxManager = () => {
   const renderMainContent = () => {
     switch (selectedSection) {
       case "summarizer": return <Summarizer emails={mockEmails} />;
-      case "deadliner": return <Deadliner emails={mockEmails} />;
+      case "calendar-deadliner": return <CalendarDeadliner emails={mockEmails} />;
       case "ai-tagging": return <AiTagging emails={mockEmails} />;
       case "ai-assistant": return <AiAssistantPanel email={selectedEmail} />;
       case "send-later": return <SendLater emails={mockEmails} />;
       case "drafts": return <Drafts emails={mockEmails} />;
-      case "calendar": return <CalendarView emails={mockEmails} />;
       case "all-emails": return <AllEmails emails={mockEmails} />;
       case "trash": return <Trash emails={mockEmails} />;
       case "inbox": 

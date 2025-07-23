@@ -25,10 +25,9 @@ interface AinboxSidebarProps {
 export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSidebarProps) => {
   const aiTools = [
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
-    { id: "deadliner", label: "Deadliner", icon: Clock, count: 5 },
+    { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
     { id: "ai-tagging", label: "AI Tagging", icon: Tag },
     { id: "ai-assistant", label: "AI Asistent", icon: Bot },
-    { id: "calendar", label: "Kalendár", icon: Calendar, count: 8 },
   ];
 
   const workflowItems = [
