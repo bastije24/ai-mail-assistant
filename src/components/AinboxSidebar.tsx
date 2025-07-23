@@ -31,15 +31,15 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
   ];
 
   const workflowItems = [
-    { id: "send-later", label: "Send Later", icon: Send, count: 2 },
     { id: "drafts", label: "Rozpísané", icon: FileEdit, count: 4 },
   ];
 
   const mainItems = [
     { id: "inbox", label: "Inbox", icon: Inbox, count: 12 },
     { id: "all-emails", label: "Všetky emaily", icon: Mail, count: 47 },
+    { id: "send-later", label: "Send Later", icon: Send, count: 2 },
+    { id: "drafts", label: "Rozpísané", icon: FileEdit, count: 4 },
     { id: "archive", label: "Archív", icon: Archive },
-    { id: "trash", label: "Kôš", icon: Trash2, count: 3 },
   ];
 
   const renderMenuItem = (item: any, isActive: boolean) => (
