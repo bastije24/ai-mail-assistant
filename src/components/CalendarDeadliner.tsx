@@ -82,6 +82,30 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       color: "red",
       date: new Date(),
       status: "Dnes"
+    },
+    {
+      id: "5",
+      title: "Prezentácia kvartálnych výsledkov",
+      time: "15:00 - 16:00",
+      type: "presentation",
+      location: "Hlavná sála",
+      organizer: "CEO",
+      attendees: "Všetci zamestnanci",
+      color: "blue",
+      date: new Date("2024-01-17"),
+      status: "Zajtra"
+    },
+    {
+      id: "6",
+      title: "Kontrola projektu ABC",
+      time: "11:00 - 12:00",
+      type: "meeting",
+      location: "Online - Teams",
+      organizer: "Project Manager",
+      attendees: "Vývojový tím",
+      color: "green",
+      date: new Date("2024-01-19"),
+      status: "Piatok"
     }
   ]);
 
@@ -101,6 +125,14 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
 
   const allEvents = events;
 
+  // Filter events for selected date
+  const selectedDateEvents = selectedDate 
+    ? allEvents.filter(event => {
+        const eventDate = new Date(event.date);
+        return eventDate.toDateString() === selectedDate.toDateString();
+      })
+    : [];
+
   const todaysEvents = allEvents.filter(event => {
     const eventDate = new Date(event.date);
     const today = new Date();
@@ -112,6 +144,26 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
     const today = new Date();
     return eventDate > today;
   });
+
+  // Format selected date for display
+  const formatSelectedDate = (date: Date | undefined) => {
+    if (!date) return "Vyberte dátum";
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return "Dnes";
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+      return "Zajtra";
+    } else {
+      return date.toLocaleDateString('sk-SK', { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'long' 
+      });
+    }
+  };
 
   const stats = [
     { number: todaysEvents.length, label: "Dnes", icon: Clock, color: "text-blue-600" },
@@ -211,10 +263,17 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
           </Card>
         </div>
 
-        {/* Right Side - Upcoming Events */}
+        {/* Right Side - Events for Selected Date */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold">Nadchádzajúce udalosti</h2>
+            <div>
+              <h2 className="text-xl font-bold">Udalosti - {formatSelectedDate(selectedDate)}</h2>
+              <p className="text-sm text-muted-foreground">
+                {selectedDateEvents.length === 0 
+                  ? "Žiadne udalosti na tento deň" 
+                  : `${selectedDateEvents.length} ${selectedDateEvents.length === 1 ? 'udalosť' : selectedDateEvents.length < 5 ? 'udalosti' : 'udalostí'}`}
+              </p>
+            </div>
             <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
               <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
                 <Plus className="mr-2 h-4 w-4" />
@@ -224,67 +283,87 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
           </div>
 
           <div className="space-y-4">
-            {allEvents.map((event) => (
-              <Card key={event.id} className="p-4">
-                <CardContent className="p-0">
-                  <div className="flex items-start gap-4">
-                    {getEventIcon(event.type, event.color)}
-                    
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{event.title}</h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {event.time}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {event.location}
-                            </span>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {event.status}
-                        </Badge>
-                      </div>
-
-                      <div className="text-sm text-gray-600 mb-3">
-                        <div className="flex items-center gap-1 mb-1">
-                          <User className="h-3 w-3" />
-                          {event.organizer}
-                        </div>
-                        <div className="text-xs text-gray-500">{event.attendees}</div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        {event.onlineLink && (
-                          <Button 
-                            size="sm" 
-                            className="bg-gray-900 hover:bg-gray-800 text-white"
-                            onClick={() => window.open(event.onlineLink, '_blank')}
-                          >
-                            <Video className="mr-1 h-3 w-3" />
-                            Pripojiť sa
-                          </Button>
-                        )}
-                        <EventDetailDialog event={event}>
-                          <Button size="sm" variant="outline">
-                            Detail
-                          </Button>
-                        </EventDetailDialog>
-                        <EditEventDialog event={event} onEventUpdate={handleEventUpdate}>
-                          <Button size="sm" variant="outline">
-                            Upraviť
-                          </Button>
-                        </EditEventDialog>
-                      </div>
-                    </div>
-                  </div>
+            {selectedDateEvents.length === 0 ? (
+              <Card className="p-8">
+                <CardContent className="p-0 text-center">
+                  <CalendarIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-muted-foreground mb-2">
+                    Žiadne udalosti
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Na {formatSelectedDate(selectedDate).toLowerCase()} nemáte naplánované žiadne udalosti.
+                  </p>
+                  <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
+                    <Button variant="outline">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Pridať novú udalosť
+                    </Button>
+                  </NewMeetingDialog>
                 </CardContent>
               </Card>
-            ))}
+            ) : (
+              selectedDateEvents.map((event) => (
+                <Card key={event.id} className="p-4">
+                  <CardContent className="p-0">
+                    <div className="flex items-start gap-4">
+                      {getEventIcon(event.type, event.color)}
+                      
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-semibold text-foreground">{event.title}</h3>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {event.time}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                {event.location}
+                              </span>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs">
+                            {event.status}
+                          </Badge>
+                        </div>
+
+                        <div className="text-sm text-muted-foreground mb-3">
+                          <div className="flex items-center gap-1 mb-1">
+                            <User className="h-3 w-3" />
+                            {event.organizer}
+                          </div>
+                          <div className="text-xs text-muted-foreground/80">{event.attendees}</div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {event.onlineLink && (
+                            <Button 
+                              size="sm" 
+                              className="bg-gray-900 hover:bg-gray-800 text-white"
+                              onClick={() => window.open(event.onlineLink, '_blank')}
+                            >
+                              <Video className="mr-1 h-3 w-3" />
+                              Pripojiť sa
+                            </Button>
+                          )}
+                          <EventDetailDialog event={event}>
+                            <Button size="sm" variant="outline">
+                              Detail
+                            </Button>
+                          </EventDetailDialog>
+                          <EditEventDialog event={event} onEventUpdate={handleEventUpdate}>
+                            <Button size="sm" variant="outline">
+                              Upraviť
+                            </Button>
+                          </EditEventDialog>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </div>
