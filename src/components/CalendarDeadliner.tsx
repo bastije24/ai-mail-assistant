@@ -29,6 +29,7 @@ interface CalendarDeadlinerProps {
 
 export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [filter, setFilter] = useState<"all" | "meeting" | "deadline">("all");
   
   // Všetky udalosti spolu - meetings, deadliny, faktúry atd.
   const allEvents = [
@@ -39,7 +40,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       type: "meeting",
       date: new Date(),
       attendees: 5,
-      location: "Conference Room A"
+      location: "Conference Room A",
+      organizer: "Martin Kováč"
     },
     {
       id: "2", 
@@ -49,7 +51,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       date: new Date(),
       location: "Zoom Meeting",
       onlineLink: "https://zoom.us/j/123456789",
-      meetingId: "123 456 789"
+      meetingId: "123 456 789",
+      organizer: "Jana Novákova"
     },
     {
       id: "3",
@@ -57,7 +60,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       time: "Do 17:00",
       type: "deadline",
       date: new Date(),
-      description: "Faktúra #2024-001 - 1,500€"
+      description: "Faktúra #2024-001 - 1,500€",
+      organizer: "Účtovníctvo"
     },
     {
       id: "4",
@@ -65,7 +69,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       time: "Do 23:59",
       type: "deadline", 
       date: new Date(),
-      description: "Finálne materiály pre klienta"
+      description: "Finálne materiály pre klienta",
+      organizer: "Jan Novák"
     },
     {
       id: "5",
@@ -73,7 +78,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       time: "10:00",
       type: "meeting",
       date: new Date("2024-01-17"),
-      attendees: 8
+      attendees: 8,
+      organizer: "Management"
     },
     {
       id: "6",
@@ -81,7 +87,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
       time: "Do konca dňa",
       type: "deadline",
       date: new Date("2024-01-19"),
-      description: "Podanie daňového priznania"
+      description: "Podanie daňového priznania",
+      organizer: "Účtovníctvo"
     }
   ];
 
@@ -89,7 +96,9 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
   const selectedDateEvents = allEvents.filter(event => {
     const eventDate = new Date(event.date);
     const selected = selectedDate || new Date();
-    return eventDate.toDateString() === selected.toDateString();
+    const matchesDate = eventDate.toDateString() === selected.toDateString();
+    const matchesFilter = filter === "all" || event.type === filter;
+    return matchesDate && matchesFilter;
   }).sort((a, b) => a.time.localeCompare(b.time));
 
   // Zisti dátumy s udalosťami pre kalendár
@@ -162,13 +171,43 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         {/* Udalosti pre vybraný deň */}
         <Card>
           <CardHeader>
-            <CardTitle>
-              {selectedDate?.toLocaleDateString('sk-SK', { 
-                weekday: 'long',
-                day: 'numeric', 
-                month: 'long' 
-              })}
-            </CardTitle>
+            <div className="flex items-center justify-between mb-4">
+              <CardTitle>
+                {selectedDate?.toLocaleDateString('sk-SK', { 
+                  weekday: 'long',
+                  day: 'numeric', 
+                  month: 'long' 
+                })}
+              </CardTitle>
+              
+              {/* Filter buttons */}
+              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                <Button 
+                  variant={filter === "all" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setFilter("all")}
+                >
+                  Všetko
+                </Button>
+                <Button 
+                  variant={filter === "meeting" ? "default" : "ghost"}
+                  size="sm" 
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setFilter("meeting")}
+                >
+                  Meetings
+                </Button>
+                <Button 
+                  variant={filter === "deadline" ? "default" : "ghost"}
+                  size="sm"
+                  className="h-7 px-3 text-xs" 
+                  onClick={() => setFilter("deadline")}
+                >
+                  Deadliny
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {selectedDateEvents.length === 0 ? (
@@ -192,7 +231,11 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                         {getEventIcon(event.type)}
                         <div>
                           <h3 className="font-medium text-gray-900">{event.title}</h3>
-                          <p className="text-sm text-gray-600">{event.time}</p>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <span>{event.time}</span>
+                            <span>•</span>
+                            <span>{event.organizer}</span>
+                          </div>
                         </div>
                       </div>
                       <Badge variant="outline" className="text-xs">
@@ -214,12 +257,13 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                     {event.onlineLink && (
                       <div className="mt-3 ml-7 p-3 bg-white rounded-lg border">
                         <div className="flex items-center justify-between">
-                          <div>
+                          <div className="flex-1">
                             <div className="flex items-center gap-2 text-sm font-medium">
                               <Video className="h-4 w-4" />
                               Zoom Meeting
                             </div>
                             <div className="text-xs text-gray-600">ID: {event.meetingId}</div>
+                            <div className="text-xs text-gray-600 mt-1">Organizátor: {event.organizer}</div>
                           </div>
                           <Button 
                             size="sm"
