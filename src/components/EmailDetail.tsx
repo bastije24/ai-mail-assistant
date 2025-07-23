@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Clock, User, Mail, MoreVertical, Reply, ReplyAll, Forward, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 import { ComposeEmailDialog } from "./ComposeEmailDialog";
+import { ComposeEmailReply } from "./ComposeEmailReply";
 
 interface Email {
   id: string;
@@ -23,6 +25,7 @@ interface EmailDetailProps {
 }
 
 export const EmailDetail = ({ email }: EmailDetailProps) => {
+  const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('sk-SK', {
       day: 'numeric',
@@ -123,15 +126,13 @@ export const EmailDetail = ({ email }: EmailDetailProps) => {
       {/* Action Buttons */}
       <div className="p-8 border-t border-ai-border bg-card">
         <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <ComposeEmailDialog 
-            replyTo={email.fromEmail}
-            subject={`Re: ${email.subject}`}
+          <Button 
+            className="bg-ai-primary hover:bg-ai-primary/90"
+            onClick={() => setReplyDialogOpen(true)}
           >
-            <Button className="bg-ai-primary hover:bg-ai-primary/90">
-              <Reply className="mr-2 h-4 w-4" />
-              Odpovedať
-            </Button>
-          </ComposeEmailDialog>
+            <Reply className="mr-2 h-4 w-4" />
+            Odpovedať
+          </Button>
           <ComposeEmailDialog 
             replyTo={[email.fromEmail, ...email.to].join(", ")}
             subject={`Re: ${email.subject}`}
@@ -167,6 +168,12 @@ export const EmailDetail = ({ email }: EmailDetailProps) => {
           </Button>
         </div>
       </div>
+
+      <ComposeEmailReply 
+        email={email}
+        open={replyDialogOpen}
+        onOpenChange={setReplyDialogOpen}
+      />
     </div>
   );
 };
