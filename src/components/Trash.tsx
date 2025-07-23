@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Trash2, RotateCcw, X, Settings } from "lucide-react";
+import { Trash2, RotateCcw, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Switch } from "./ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { useTheme } from "./theme-provider";
 
 interface Email {
   id: string;
@@ -23,7 +21,6 @@ interface TrashProps {
 }
 
 export const Trash = ({ emails }: TrashProps) => {
-  const { theme, setTheme } = useTheme();
   // Mock deleted emails
   const deletedEmails = [
     {
@@ -204,42 +201,6 @@ export const Trash = ({ emails }: TrashProps) => {
           ))}
         </div>
       )}
-
-      {/* Theme Settings */}
-      <Card className="bg-primary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Settings className="h-5 w-5" />
-            Nastavenia témy
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="font-medium">Tmavý režim</span>
-              <p className="text-sm text-muted-foreground">
-                {theme === "dark" ? "Zapnutý - používa tmavé farby" : 
-                 theme === "light" ? "Vypnutý - používa svetlé farby" : 
-                 "Automatický - sleduje systémové nastavenie"}
-              </p>
-            </div>
-            <Switch 
-              checked={theme === "dark"} 
-              onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="font-medium">Sledovať systém</span>
-              <p className="text-sm text-muted-foreground">Automaticky prepína podľa systémového nastavenia</p>
-            </div>
-            <Switch 
-              checked={theme === "system"} 
-              onCheckedChange={(checked) => setTheme(checked ? "system" : "light")}
-            />
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Info Box */}
       <Card className="bg-primary/5 border-primary/20">
