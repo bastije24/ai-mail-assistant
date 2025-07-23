@@ -241,7 +241,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-6">
+      <div className="grid lg:grid-cols-5 gap-6">
         {/* Calendar */}
         <div className="lg:col-span-1 space-y-4">
           <Card>
@@ -366,7 +366,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         </div>
 
         {/* Today's Events (including deadlines) */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center justify-between">
@@ -495,71 +495,106 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
             </CardContent>
           </Card>
         </div>
-      </div>
 
-      {/* Upcoming Events */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Nadchádzajúce udalosti</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            {upcomingEvents.map((event) => (
-              <div key={event.id} className={`p-4 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-2">
-                    {getEventIcon(event.type)}
-                    <div>
-                      <h3 className="font-medium text-foreground text-sm mb-1">{event.title}</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {event.date.toLocaleDateString('sk-SK', { 
-                          day: 'numeric', 
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                  {getPriorityBadge(event.priority)}
+        {/* Right Panel - Insights & Actions */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* AI Calendar Insights */}
+          <Card className="bg-ai-primary-light border-ai-primary/20">
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                <div className="h-6 w-6 bg-ai-primary rounded-full flex items-center justify-center">
+                  <span className="text-xs text-white font-medium">AI</span>
+                </div>
+                Kalendárne insights
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Dnešný prehľad</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>• {todaysEvents.filter(e => e.type !== "deadline").length} stretnutí naplánovaných</li>
+                    <li>• {todaysEvents.filter(e => e.type === "deadline").length} deadlineov</li>
+                    <li>• Najvyťaženejší čas: 14:00-16:00</li>
+                  </ul>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">AI odporúčania</h4>
+                  <ul className="space-y-1 text-sm text-muted-foreground">
+                    <li>• Pripraviť materiály pre deadliny</li>
+                    <li>• Pridať 15min buffer pred prezentáciou</li>
+                    <li>• Potvrdiť účasť na stretnutiach</li>
+                  </ul>
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
-      {/* AI Calendar Insights */}
-      <Card className="bg-ai-primary-light border-ai-primary/20">
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <div className="h-6 w-6 bg-ai-primary rounded-full flex items-center justify-center">
-              <span className="text-xs text-white font-medium">AI</span>
-            </div>
-            Kalendárne insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Dnešný prehľad</h4>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>• {todaysEvents.filter(e => e.type !== "deadline").length} stretnutí naplánovaných</li>
-                <li>• {todaysEvents.filter(e => e.type === "deadline").length} deadlineov</li>
-                <li>• Najvyťaženejší čas: 14:00-16:00</li>
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">AI odporúčania</h4>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li>• Pripraviť materiály pre deadliny</li>
-                <li>• Pridať 15min buffer pred prezentáciou</li>
-                <li>• Potvrdiť účasť na stretnutiach</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Upcoming Events */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Nadchádzajúce udalosti</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {upcomingEvents.map((event) => (
+                  <div key={event.id} className={`p-3 rounded-lg border-l-4 ${getEventColor(event.type, event.priority)}`}>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-2">
+                        {getEventIcon(event.type)}
+                        <div>
+                          <h3 className="font-medium text-foreground text-sm mb-1">{event.title}</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {event.date.toLocaleDateString('sk-SK', { 
+                              day: 'numeric', 
+                              month: 'short',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      {getPriorityBadge(event.priority)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Weekly Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Týždenný prehľad</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                  <span className="text-sm">Pondelok</span>
+                  <Badge variant="outline">3 udalosti</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-green-50 rounded">
+                  <span className="text-sm">Utorok</span>
+                  <Badge variant="outline">1 deadline</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-orange-50 rounded">
+                  <span className="text-sm">Streda</span>
+                  <Badge variant="outline">2 stretnutia</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-purple-50 rounded">
+                  <span className="text-sm">Štvrtok</span>
+                  <Badge variant="outline">1 prezentácia</Badge>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                  <span className="text-sm">Piatok</span>
+                  <Badge variant="outline">Voľný deň</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
     </div>
   );
 };
