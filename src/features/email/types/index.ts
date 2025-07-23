@@ -10,6 +10,7 @@ export interface Email {
   isUrgent: boolean;
   status: string;
   hasAttachments?: boolean;
+  deletedAt?: Date;
 }
 
 export interface EmailListProps {

@@ -7,14 +7,17 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import { EmailTagManager } from "./EmailTagManager";
+import { useEmailData } from "../hooks/useEmailData";
 import type { Email, EmailListProps } from "../types";
 
 export const AllEmails = ({ emails }: EmailListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterBy, setFilterBy] = useState("all");
-  const [emailList, setEmailList] = useState([
+  const { updateEmailStatus, markAsRead } = useEmailData();
+
+  // Combine original emails with mock emails for demonstration
+  const allEmailsData = [
     ...emails,
-    // Add more mock emails for demonstration
     {
       id: "3",
       from: "Peter Novák",
@@ -51,9 +54,12 @@ export const AllEmails = ({ emails }: EmailListProps) => {
       isUrgent: false,
       status: "read"
     }
-  ]);
+  ];
 
-  const filteredEmails = emailList.filter(email => {
+  const filteredEmails = allEmailsData.filter(email => {
+    // Only show non-deleted emails
+    if (email.status === "deleted") return false;
+    
     const matchesSearch = email.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          email.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          email.content.toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,27 +86,17 @@ export const AllEmails = ({ emails }: EmailListProps) => {
   };
 
   const handleArchive = (emailId: string) => {
-    setEmailList(emails => emails.map(email => 
-      email.id === emailId ? { ...email, status: "archived" } : email
-    ));
+    updateEmailStatus(emailId, "archived");
     console.log(`Archiving email ${emailId}`);
   };
 
   const handleMoveToTrash = (emailId: string) => {
-    setEmailList(emails => emails.map(email => 
-      email.id === emailId ? { ...email, status: "deleted", deletedAt: new Date() } : email
-    ));
+    updateEmailStatus(emailId, "deleted");
     console.log(`Moving email ${emailId} to trash`);
   };
 
-  const handleMarkAsRead = (emailId: string) => {
-    setEmailList(emails => emails.map(email => 
-      email.id === emailId ? { ...email, isRead: true } : email
-    ));
-  };
-
   const handleViewEmail = (emailId: string) => {
-    handleMarkAsRead(emailId);
+    markAsRead(emailId);
     console.log(`Viewing email ${emailId}`);
   };
 

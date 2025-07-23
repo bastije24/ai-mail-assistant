@@ -52,12 +52,31 @@ Mária`,
 ];
 
 export const useEmailData = () => {
-  const [emails] = useState<Email[]>(mockEmails);
+  const [emails, setEmails] = useState<Email[]>(mockEmails);
   const [selectedEmail, setSelectedEmail] = useState<Email>(mockEmails[0]);
+
+  const updateEmailStatus = (emailId: string, status: "read" | "unread" | "archived" | "deleted") => {
+    setEmails(prev => prev.map(email => 
+      email.id === emailId ? { 
+        ...email, 
+        status,
+        isRead: status === "read" || status === "archived",
+        deletedAt: status === "deleted" ? new Date() : email.deletedAt
+      } : email
+    ));
+  };
+
+  const markAsRead = (emailId: string) => {
+    setEmails(prev => prev.map(email => 
+      email.id === emailId ? { ...email, isRead: true } : email
+    ));
+  };
 
   return {
     emails,
     selectedEmail,
     setSelectedEmail,
+    updateEmailStatus,
+    markAsRead,
   };
 };
