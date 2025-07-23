@@ -11,7 +11,7 @@ import { AllEmails } from "./AllEmails";
 import { Trash } from "./Trash";
 import { EmailsList } from "./EmailsList";
 import { Dialog, DialogContent } from "./ui/dialog";
-import { X } from "lucide-react";
+import { X, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 
 // Mock email data
@@ -79,6 +79,35 @@ export const AinboxManager = () => {
       case "drafts": return <Drafts emails={mockEmails} />;
       case "all-emails": return <EmailsList emails={mockEmails} />;
       case "trash": return <Trash emails={mockEmails} />;
+      case "settings": return (
+        <div className="flex-1 overflow-auto">
+          <div className="max-w-4xl mx-auto p-6 space-y-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-10 w-10 bg-primary rounded-lg flex items-center justify-center">
+                <Settings className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold text-foreground">Nastavenia účtu</h1>
+                <p className="text-sm text-muted-foreground">Spravujte svoj profil a predvoľby aplikácie</p>
+              </div>
+            </div>
+            
+            {/* Settings content will go here - for now just a placeholder */}
+            <div className="p-6 bg-card rounded-lg border text-center">
+              <h3 className="text-lg font-medium mb-2">Nastavenia profilu</h3>
+              <p className="text-muted-foreground mb-4">
+                Kliknite na svoj profil v ľavom hornom rohu pre prístup k detailným nastaveniam.
+              </p>
+              <div className="flex gap-2 justify-center">
+                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Profil</div>
+                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Bezpečnosť</div>
+                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Notifikácie</div>
+                <div className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Predplatné</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
       case "archive": return (
         <div className="flex-1 p-6">
           <h2 className="text-2xl font-bold mb-6">Archív - Spracované emaily</h2>
