@@ -38,7 +38,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
   ];
 
   const mainItems = [
-    { id: "inbox", label: "Inbox", icon: Inbox, count: 12 },
+    { id: "trash", label: "Kôš", icon: Trash2, count: 3 },
   ];
 
   const renderMenuItem = (item: any, isActive: boolean) => (
