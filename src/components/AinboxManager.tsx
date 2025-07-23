@@ -92,9 +92,39 @@ export const AinboxManager = () => {
       {/* Email Detail - Center */}
       {renderMainContent()}
       
-      {/* AI Assistant Panel - Right - only show for inbox/email view */}
-      {(selectedSection === "inbox" || selectedSection === "archive") && (
+      {/* AI Assistant Panel - Right - only show for inbox view */}
+      {selectedSection === "inbox" && (
         <AiAssistantPanel email={selectedEmail} />
+      )}
+      
+      {/* Processed Emails Panel - Right - only show for archive view */}
+      {selectedSection === "archive" && (
+        <div className="w-96 bg-card border-l border-border p-4">
+          <h3 className="font-semibold mb-4">Spracované emaily</h3>
+          <div className="space-y-3">
+            {mockEmails.filter(email => email.status === "read").map((email) => (
+              <div key={email.id} className="p-3 bg-muted rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">{email.from}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {email.timestamp.toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground mb-2">{email.subject}</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                    Spracovaný
+                  </span>
+                  {email.isUrgent && (
+                    <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                      Urgentný
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
