@@ -32,6 +32,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 import { useTheme } from "./theme-provider";
 
 interface AinboxSidebarProps {
@@ -47,6 +48,12 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const { theme, setTheme } = useTheme();
+  
+  // Settings state
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [urgentNotifications, setUrgentNotifications] = useState(true);
+  const [weeklyDigest, setWeeklyDigest] = useState(false);
+  const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const aiTools = [
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
     { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
@@ -506,13 +513,16 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     Bezpečnosť účtu
                   </h3>
                   <div className="p-6 bg-card rounded-lg border space-y-4">
-                    <div className="flex items-center justify-between py-2">
-                      <div>
-                        <span className="font-medium">Dvojfaktorové overenie</span>
-                        <p className="text-sm text-muted-foreground">Dodatočná ochrana vašeho účtu</p>
-                      </div>
-                      <Button variant="outline" size="sm">Nastaviť</Button>
-                    </div>
+                     <div className="flex items-center justify-between py-2">
+                       <div>
+                         <span className="font-medium">Dvojfaktorové overenie</span>
+                         <p className="text-sm text-muted-foreground">Dodatočná ochrana vašeho účtu</p>
+                       </div>
+                       <Switch 
+                         checked={twoFactorAuth} 
+                         onCheckedChange={setTwoFactorAuth}
+                       />
+                     </div>
                     <div className="flex items-center justify-between py-2">
                       <div>
                         <span className="font-medium">Aktívne relácie</span>
@@ -536,33 +546,38 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
                     <Bell className="h-5 w-5" />
                     Notifikácie
                   </h3>
-                  <div className="p-6 bg-card rounded-lg border space-y-4">
-                    <div className="flex items-center justify-between py-2">
-                      <div>
-                        <span className="font-medium">Email upozornenia</span>
-                        <p className="text-sm text-muted-foreground">Nové správy a aktualizácie</p>
-                      </div>
-                      <Button variant="outline" size="sm" className="bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success border-ai-success/20">
-                        Zapnuté
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-between py-2">
-                      <div>
-                        <span className="font-medium">Urgentné emaily</span>
-                        <p className="text-sm text-muted-foreground">Okamžité upozornenia na dôležité správy</p>
-                      </div>
-                      <Button variant="outline" size="sm" className="bg-ai-success-light dark:bg-ai-success/20 text-ai-success dark:text-ai-success border-ai-success/20">
-                        Zapnuté
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-between py-2">
-                      <div>
-                        <span className="font-medium">Týždenné súhrny</span>
-                        <p className="text-sm text-muted-foreground">Prehľad aktivity za týždeň</p>
-                      </div>
-                      <Button variant="outline" size="sm">Vypnuté</Button>
-                    </div>
-                  </div>
+                   <div className="p-6 bg-card rounded-lg border space-y-4">
+                     <div className="flex items-center justify-between py-2">
+                       <div>
+                         <span className="font-medium">Email upozornenia</span>
+                         <p className="text-sm text-muted-foreground">Nové správy a aktualizácie</p>
+                       </div>
+                       <Switch 
+                         checked={emailNotifications} 
+                         onCheckedChange={setEmailNotifications}
+                       />
+                     </div>
+                     <div className="flex items-center justify-between py-2">
+                       <div>
+                         <span className="font-medium">Urgentné emaily</span>
+                         <p className="text-sm text-muted-foreground">Okamžité upozornenia na dôležité správy</p>
+                       </div>
+                       <Switch 
+                         checked={urgentNotifications} 
+                         onCheckedChange={setUrgentNotifications}
+                       />
+                     </div>
+                     <div className="flex items-center justify-between py-2">
+                       <div>
+                         <span className="font-medium">Týždenné súhrny</span>
+                         <p className="text-sm text-muted-foreground">Prehľad aktivity za týždeň</p>
+                       </div>
+                       <Switch 
+                         checked={weeklyDigest} 
+                         onCheckedChange={setWeeklyDigest}
+                       />
+                     </div>
+                   </div>
                 </div>
 
                 {/* Data & Privacy */}
