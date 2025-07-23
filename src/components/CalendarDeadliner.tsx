@@ -130,27 +130,21 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
         <p className="text-gray-600">Stretnutia, deadliny a dôležité termíny</p>
       </div>
 
-      {/* Kalendár hore */}
-      <div className="max-w-4xl mx-auto">
+      {/* Veľký kalendár v strede */}
+      <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5" />
-                Kalendár
-              </span>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-1" />
-                Pridať
-              </Button>
+            <CardTitle className="flex items-center justify-center gap-2 text-xl">
+              <CalendarIcon className="h-6 w-6" />
+              Kalendár
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex justify-center">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              className="rounded-md border-0 w-full mx-auto"
+              className="rounded-md border-0 scale-125 mx-auto"
               modifiers={{
                 hasEvents: datesWithEvents
               }}
@@ -159,12 +153,20 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                   backgroundColor: "#3b82f6",
                   color: "white",
                   fontWeight: "bold",
-                  borderRadius: "6px"
+                  borderRadius: "8px"
                 }
               }}
             />
           </CardContent>
         </Card>
+      </div>
+
+      {/* Rýchle pridanie */}
+      <div className="max-w-md mx-auto">
+        <Button className="w-full" size="lg">
+          <Plus className="h-5 w-5 mr-2" />
+          Pridať novú udalosť
+        </Button>
       </div>
 
       {/* Udalosti dole pod kalendárom */}
