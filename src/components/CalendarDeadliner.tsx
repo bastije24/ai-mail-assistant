@@ -243,7 +243,7 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Calendar */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Kalendár</CardTitle>
@@ -269,11 +269,97 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
           </Card>
 
           {/* Quick Add */}
-          <Card className="mt-4">
+          <Card>
             <CardContent className="p-4">
               <Button className="w-full bg-ai-primary hover:bg-ai-primary/90">
                 <Plus className="mr-2 h-4 w-4" />
                 Pridať udalosť
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Štatistiky</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Aktívne deadliny</span>
+                <Badge className="bg-red-100 text-red-800">
+                  {allEvents.filter(e => e.type === "deadline" && e.status === "active").length}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Dnešné udalosti</span>
+                <Badge variant="secondary">{todaysEvents.length}</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Tento týždeň</span>
+                <Badge variant="outline">
+                  {allEvents.filter(e => {
+                    const eventDate = new Date(e.date);
+                    const today = new Date();
+                    const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
+                    const weekEnd = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+                    return eventDate >= weekStart && eventDate <= weekEnd;
+                  }).length}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Next Urgent Deadline */}
+          {(() => {
+            const nextDeadline = allEvents
+              .filter(e => e.type === "deadline" && e.status === "active")
+              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+            
+            return nextDeadline ? (
+              <Card className="border-l-4 border-l-red-500">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                    Najbližší deadline
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <h3 className="font-medium text-sm">{nextDeadline.title}</h3>
+                    <p className="text-xs text-muted-foreground">Od: {nextDeadline.from}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-red-100 text-red-800 text-xs">
+                      {formatDeadline(nextDeadline.date)}
+                    </Badge>
+                    {getPriorityBadge(nextDeadline.priority)}
+                  </div>
+                  <Button size="sm" variant="outline" className="w-full">
+                    <ExternalLink className="mr-2 h-3 w-3" />
+                    Otvoriť
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : null;
+          })()}
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Rýchle akcie</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button variant="outline" size="sm" className="w-full justify-start">
+                <Clock className="mr-2 h-4 w-4" />
+                Nový deadline
+              </Button>
+              <Button variant="outline" size="sm" className="w-full justify-start">
+                <Users className="mr-2 h-4 w-4" />
+                Naplánovať stretnutie
+              </Button>
+              <Button variant="outline" size="sm" className="w-full justify-start">
+                <Video className="mr-2 h-4 w-4" />
+                Vytvoriť online meeting
               </Button>
             </CardContent>
           </Card>
