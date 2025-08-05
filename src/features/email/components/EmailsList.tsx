@@ -89,7 +89,7 @@ export const EmailsList = ({ emails }: EmailListProps) => {
   }
 
   return (
-    <div className="flex-1 p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto">
+    <div className="w-full h-full flex flex-col p-4 md:p-6 space-y-4 md:space-y-6 overflow-y-auto">
       <div className="flex items-center gap-3 mb-4 md:mb-6">
         <div className="h-8 w-8 md:h-10 md:w-10 bg-blue-500 rounded-lg flex items-center justify-center">
           <Mail className="h-4 w-4 md:h-5 md:w-5 text-white" />

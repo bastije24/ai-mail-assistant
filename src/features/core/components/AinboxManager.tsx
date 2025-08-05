@@ -82,7 +82,7 @@ export const AinboxManager = () => {
   };
 
   return (
-    <div className="h-screen flex bg-background relative">
+    <div className="h-screen w-full flex flex-col md:flex-row bg-background overflow-hidden">
       {/* Mobile backdrop */}
       {sidebarOpen && (
         <div 
@@ -101,14 +101,8 @@ export const AinboxManager = () => {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       
-      <div className="flex-1 flex flex-col md:flex-row min-w-0">
+      <div className="flex-1 min-w-0 overflow-hidden">
         {renderMainContent()}
-        
-        {selectedSection === "inbox" && (
-          <div className="hidden lg:block">
-            <AiAssistantPanel email={selectedEmail} />
-          </div>
-        )}
       </div>
     </div>
   );

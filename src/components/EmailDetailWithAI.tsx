@@ -40,9 +40,9 @@ export const EmailDetailWithAI = ({ email, onBack }: EmailDetailWithAIProps) => 
   };
 
   return (
-    <div className="h-screen flex flex-col lg:flex-row bg-background">
-      {/* Email Detail - Top on mobile, Left on desktop */}
-      <div className="flex-1 bg-background lg:border-r border-border flex flex-col">
+    <div className="w-full h-full flex flex-col bg-background overflow-hidden">
+      {/* Email Detail - Full width */}
+      <div className="flex-1 bg-background flex flex-col min-h-0">
         {/* Header */}
         <div className="p-4 md:p-6 border-b border-border bg-card">
           <div className="max-w-4xl mx-auto">
@@ -166,11 +166,6 @@ export const EmailDetailWithAI = ({ email, onBack }: EmailDetailWithAIProps) => 
             </div>
           </div>
         </div>
-      </div>
-
-      {/* AI Assistant Panel - Hidden on mobile, Right Side on desktop */}
-      <div className="hidden lg:block lg:w-96">
-        <EmailSpecificAI email={email} />
       </div>
 
       <ComposeEmailReply 
