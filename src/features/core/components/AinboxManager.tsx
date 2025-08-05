@@ -16,6 +16,7 @@ export const AinboxManager = () => {
   const { emails, selectedEmail, setSelectedEmail } = useEmailData();
   const [selectedSection, setSelectedSection] = useState("inbox");
   const [fullscreenEmail, setFullscreenEmail] = useState<any>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const renderMainContent = () => {
@@ -81,17 +82,34 @@ export const AinboxManager = () => {
   };
 
   return (
-    <div className="h-screen flex bg-background">
+    <div className="h-screen flex bg-background relative">
+      {/* Mobile backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       <AinboxSidebar 
         selectedSection={selectedSection}
-        onSectionChange={setSelectedSection}
+        onSectionChange={(section) => {
+          setSelectedSection(section);
+          setSidebarOpen(false); // Close sidebar on mobile after selection
+        }}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       
-      {renderMainContent()}
-      
-      {selectedSection === "inbox" && (
-        <AiAssistantPanel email={selectedEmail} />
-      )}
+      <div className="flex-1 flex flex-col md:flex-row min-w-0">
+        {renderMainContent()}
+        
+        {selectedSection === "inbox" && (
+          <div className="hidden lg:block">
+            <AiAssistantPanel email={selectedEmail} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

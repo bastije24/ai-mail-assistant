@@ -38,9 +38,11 @@ import { useTheme } from "./theme-provider";
 interface AinboxSidebarProps {
   selectedSection: string;
   onSectionChange: (section: string) => void;
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
-export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSidebarProps) => {
+export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true, onToggle }: AinboxSidebarProps) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [activeSettingsSection, setActiveSettingsSection] = useState("profile");
   const [editingProfile, setEditingProfile] = useState(false);
@@ -111,7 +113,25 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange }: AinboxSideba
 
   return (
     <>
-      <div className="w-80 bg-ai-sidebar border-r border-ai-border flex flex-col">
+      {/* Mobile Menu Button */}
+      {onToggle && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed top-4 left-4 z-50 md:hidden bg-background border shadow-lg"
+          onClick={onToggle}
+        >
+          <Bot className="h-5 w-5" />
+        </Button>
+      )}
+      
+      <div className={`
+        fixed md:relative inset-y-0 left-0 z-50 
+        w-80 bg-ai-sidebar border-r border-ai-border flex flex-col
+        transform transition-transform duration-300 ease-in-out
+        md:transform-none
+        ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
         {/* Header */}
         <div className="p-6 border-b border-ai-border">
           <Button 
