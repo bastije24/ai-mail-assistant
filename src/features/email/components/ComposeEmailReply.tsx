@@ -158,16 +158,16 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
         {/* AI Concept Selection */}
         <div className="space-y-2">
           <Label className="text-xs font-medium">AI návrhy odpovede</Label>
-          <div className="grid grid-cols-1 gap-1">
+          <div className="grid grid-cols-1 gap-0.5">
             {aiConcepts.map((concept) => (
               <Button
                 key={concept.id}
                 variant={selectedConceptId === concept.id ? "default" : "outline"}
-                className="h-auto p-2 justify-start text-left"
+                className="h-auto p-1.5 justify-start text-left"
                 onClick={() => handleConceptSelect(concept.id)}
               >
-                <div className="flex items-start gap-2 w-full">
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                <div className="flex items-start gap-1.5 w-full">
+                  <div className="flex-shrink-0 w-4 h-4 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
                     {concept.id}
                   </div>
                   <div className="flex-1 min-w-0">
