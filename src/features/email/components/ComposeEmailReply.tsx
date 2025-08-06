@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -63,11 +63,11 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto animate-slide-in-right data-[state=closed]:animate-slide-out-right">
-        <DialogHeader>
-          <DialogTitle>Odpoveď na: {email.subject}</DialogTitle>
-        </DialogHeader>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-[800px] sm:w-[800px] overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>Odpoveď na: {email.subject}</SheetTitle>
+        </SheetHeader>
         
         <div className="space-y-6">
           {/* Original Email Context */}
@@ -140,7 +140,7 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 };
