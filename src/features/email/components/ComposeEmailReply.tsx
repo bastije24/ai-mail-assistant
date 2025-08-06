@@ -190,30 +190,6 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
             </p>
           </div>
 
-          {/* Custom Input for modifications */}
-          <div className="space-y-2">
-            <Label htmlFor="custom-input">Vlastná úprava / doplnenie</Label>
-            <Textarea
-              id="custom-input"
-              placeholder="Napíš sem úpravu alebo doplnenie k vybranej odpovedi..."
-              rows={3}
-              className="text-sm"
-              onChange={(e) => {
-                if (selectedConceptId && e.target.value.trim()) {
-                  const concept = aiConcepts.find(c => c.id === selectedConceptId);
-                  if (concept) {
-                    setReplyContent(concept.template + "\n\n" + e.target.value);
-                  }
-                } else if (selectedConceptId) {
-                  const concept = aiConcepts.find(c => c.id === selectedConceptId);
-                  if (concept) {
-                    setReplyContent(concept.template);
-                  }
-                }
-              }}
-            />
-          </div>
-
           {/* Reply Content */}
           <div className="space-y-2">
             <Label htmlFor="reply-content">Finálna odpoveď</Label>
