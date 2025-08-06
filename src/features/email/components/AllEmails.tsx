@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import { EmailTagManager } from "./EmailTagManager";
 import { useEmailData } from "../hooks/useEmailData";
@@ -212,43 +213,54 @@ export const AllEmails = ({ emails }: EmailListProps) => {
                     >
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <ComposeEmailDialog 
-                      replyTo={email.fromEmail || `${email.from}@email.com`}
-                      subject={`Re: ${email.subject}`}
-                    >
-                      <Button 
-                        size="sm" 
-                        variant="ghost"
-                        title="Odpovedať"
-                      >
-                        <Reply className="h-3 w-3" />
-                      </Button>
-                    </ComposeEmailDialog>
-                    <EmailTagManager>
-                      <Button 
-                        size="sm" 
-                        variant="ghost"
-                        title="Pridať tagy"
-                      >
-                        <Tag className="h-3 w-3" />
-                      </Button>
-                    </EmailTagManager>
-                    <Button 
-                      size="sm" 
-                      variant="ghost"
-                      onClick={() => handleArchive(email.id)}
-                      title="Archivovať"
-                    >
-                      <Archive className="h-3 w-3" />
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="ghost"
-                      onClick={() => handleMoveToTrash(email.id)}
-                      title="Presunúť do koša"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                    
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          size="sm" 
+                          variant="ghost"
+                          title="Viac možností"
+                        >
+                          <MoreVertical className="h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <ComposeEmailDialog 
+                          replyTo={email.fromEmail || `${email.from}@email.com`}
+                          subject={`Re: ${email.subject}`}
+                          content={`\n\n--- Pôvodná správa ---\nOd: ${email.from}\nPredmet: ${email.subject}\nDátum: ${formatDate(email.timestamp)}\n\n${email.content}`}
+                        >
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Reply className="mr-2 h-4 w-4" />
+                            Odpovedať
+                          </DropdownMenuItem>
+                        </ComposeEmailDialog>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <EmailTagManager>
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Tag className="mr-2 h-4 w-4" />
+                            Pridať tagy
+                          </DropdownMenuItem>
+                        </EmailTagManager>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuItem onClick={() => handleArchive(email.id)}>
+                          <Archive className="mr-2 h-4 w-4" />
+                          Archivovať
+                        </DropdownMenuItem>
+                        
+                        <DropdownMenuItem 
+                          onClick={() => handleMoveToTrash(email.id)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Presunúť do koša
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 </div>
               </div>
