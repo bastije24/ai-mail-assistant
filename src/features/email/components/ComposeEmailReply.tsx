@@ -147,22 +147,6 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
         </SheetHeader>
         
         <div className="flex-1 overflow-y-auto space-y-6 py-4">
-          {/* Context Input for AI Generation */}
-          <div className="space-y-2">
-            <Label htmlFor="context-input">Kontext pre AI odpovede</Label>
-            <Textarea
-              id="context-input"
-              value={contextInput}
-              onChange={(e) => setContextInput(e.target.value)}
-              placeholder="Napríklad: 'auto je už predané', 'termín sa posunul', 'projekt je zrušený'..."
-              rows={2}
-              className="text-sm"
-            />
-            <p className="text-xs text-muted-foreground">
-              Zadajte informáciu a AI vygeneruje 4 varianty odpovede podľa tohto kontextu
-            </p>
-          </div>
-
           {/* AI Concept Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">AI návrhy odpovede</Label>
@@ -188,6 +172,22 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
                 </Button>
               ))}
             </div>
+          </div>
+
+          {/* Context Input for AI Generation */}
+          <div className="space-y-2">
+            <Label htmlFor="context-input">Kontext pre AI odpovede</Label>
+            <Textarea
+              id="context-input"
+              value={contextInput}
+              onChange={(e) => setContextInput(e.target.value)}
+              placeholder="Napríklad: 'auto je už predané', 'termín sa posunul', 'projekt je zrušený'..."
+              rows={2}
+              className="text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Zadajte informáciu a AI vygeneruje 4 varianty odpovede podľa tohto kontextu
+            </p>
           </div>
 
           {/* Custom Input for modifications */}
