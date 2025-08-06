@@ -8,12 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import { EmailTagManager } from "./EmailTagManager";
 import { useEmailData } from "../hooks/useEmailData";
+import { useToast } from "@/hooks/use-toast";
 import type { Email, EmailListProps } from "../types";
 
 export const AllEmails = ({ emails }: EmailListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterBy, setFilterBy] = useState("all");
   const { updateEmailStatus, markAsRead } = useEmailData();
+  const { toast } = useToast();
 
   // Combine original emails with mock emails for demonstration
   const allEmailsData = [
@@ -86,13 +88,21 @@ export const AllEmails = ({ emails }: EmailListProps) => {
   };
 
   const handleArchive = (emailId: string) => {
+    const email = allEmailsData.find(e => e.id === emailId);
     updateEmailStatus(emailId, "archived");
-    console.log(`Archiving email ${emailId}`);
+    toast({
+      title: "Email archivovaný",
+      description: `"${email?.subject}" bol úspešne archivovaný`,
+    });
   };
 
   const handleMoveToTrash = (emailId: string) => {
+    const email = allEmailsData.find(e => e.id === emailId);
     updateEmailStatus(emailId, "deleted");
-    console.log(`Moving email ${emailId} to trash`);
+    toast({
+      title: "Email presuntý do koša",
+      description: `"${email?.subject}" bol presuntý do koša`,
+    });
   };
 
   const handleViewEmail = (emailId: string) => {

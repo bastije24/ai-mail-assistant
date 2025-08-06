@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { Mail, Clock, Star, Paperclip } from "lucide-react";
+import { Mail, Clock, Star, Paperclip, MoreVertical, Archive, Trash2, Eye, Reply, Tag } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EmailDetailWithAI } from "@/components/EmailDetailWithAI";
+import { useEmailData } from "../hooks/useEmailData";
+import { useToast } from "@/hooks/use-toast";
 import type { Email, EmailListProps } from "../types";
 
 export const EmailsList = ({ emails }: EmailListProps) => {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const { updateEmailStatus, markAsRead } = useEmailData();
+  const { toast } = useToast();
   
   const allEmails = [
     ...emails,
@@ -79,6 +85,26 @@ export const EmailsList = ({ emails }: EmailListProps) => {
     });
   };
 
+  const handleArchive = (emailId: string, emailSubject: string) => {
+    updateEmailStatus(emailId, "archived");
+    toast({
+      title: "Email archivovaný",
+      description: `"${emailSubject}" bol úspešne archivovaný`,
+    });
+  };
+
+  const handleDelete = (emailId: string, emailSubject: string) => {
+    updateEmailStatus(emailId, "deleted");
+    toast({
+      title: "Email presuntý do koša",
+      description: `"${emailSubject}" bol presuntý do koša`,
+    });
+  };
+
+  const handleMarkAsRead = (emailId: string) => {
+    markAsRead(emailId);
+  };
+
   if (selectedEmail) {
     return (
       <EmailDetailWithAI 
@@ -133,14 +159,16 @@ export const EmailsList = ({ emails }: EmailListProps) => {
         {allEmails.map((email) => (
           <Card 
             key={email.id} 
-            className={`hover:shadow-md transition-all cursor-pointer ${
+            className={`hover:shadow-md transition-all ${
               !email.isRead ? 'border-l-4 border-l-ai-primary bg-blue-50/30' : ''
             }`}
-            onClick={() => setSelectedEmail(email)}
           >
             <CardContent className="p-3 md:p-4">
               <div className="flex items-start justify-between">
-                <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                <div 
+                  className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 cursor-pointer"
+                  onClick={() => setSelectedEmail(email)}
+                >
                   <Avatar className="h-8 w-8 md:h-10 md:w-10 flex-shrink-0">
                     <AvatarFallback className="text-xs md:text-sm font-medium">
                       {email.from.split(' ').map(n => n[0]).join('')}
@@ -182,9 +210,66 @@ export const EmailsList = ({ emails }: EmailListProps) => {
                     <Clock className="h-3 w-3" />
                     <span className="text-xs">{formatDate(email.timestamp)}</span>
                   </div>
-                  {email.isUrgent && (
-                    <Star className="h-3 w-3 md:h-4 md:w-4 text-red-500 fill-red-500" />
-                  )}
+                  
+                  <div className="flex items-center gap-1">
+                    {email.isUrgent && (
+                      <Star className="h-3 w-3 md:h-4 md:w-4 text-red-500 fill-red-500" />
+                    )}
+                    
+                    {/* Email Actions Dropdown */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-6 w-6 p-0 hover:bg-secondary"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreVertical className="h-3 w-3" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEmail(email);
+                        }}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          Zobraziť detail
+                        </DropdownMenuItem>
+                        
+                        {!email.isRead && (
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            handleMarkAsRead(email.id);
+                          }}>
+                            <Mail className="mr-2 h-4 w-4" />
+                            Označiť ako prečítané
+                          </DropdownMenuItem>
+                        )}
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuItem onClick={(e) => {
+                          e.stopPropagation();
+                          handleArchive(email.id, email.subject);
+                        }}>
+                          <Archive className="mr-2 h-4 w-4" />
+                          Archivovať
+                        </DropdownMenuItem>
+                        
+                        <DropdownMenuItem 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(email.id, email.subject);
+                          }}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Presunúť do koša
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
               </div>
             </CardContent>
