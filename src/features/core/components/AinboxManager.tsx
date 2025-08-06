@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AinboxSidebar } from "@/components/AinboxSidebar";
-import { EmailDetail, useEmailData, AllEmails, EmailsList, Drafts, Trash } from "@/features/email";
+import { EmailDetail, useEmailData, AllEmails, EmailsList, Drafts, Trash, Archive } from "@/features/email";
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { Summarizer } from "@/components/Summarizer";
 import { CalendarDeadliner } from "@/components/CalendarDeadliner";
@@ -28,6 +28,7 @@ export const AinboxManager = () => {
       case "send-later": return <SendLater emails={emails} />;
       case "drafts": return <Drafts emails={emails} />;
       case "all-emails": return <EmailsList emails={emails} />;
+      case "archive": return <Archive emails={emails} />;
       case "trash": return <Trash emails={emails} />;
       case "settings": return (
         <div className="flex-1 overflow-y-auto">

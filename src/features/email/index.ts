@@ -7,6 +7,7 @@ export { ComposeEmailReply } from "./components/ComposeEmailReply";
 export { EmailTagManager } from "./components/EmailTagManager";
 export { Drafts } from "./components/Drafts";
 export { Trash } from "./components/Trash";
+export { Archive } from "./components/Archive";
 
 export { useEmailData } from "./hooks/useEmailData";
 export type { Email, EmailListProps, EmailDetailProps } from "./types";
