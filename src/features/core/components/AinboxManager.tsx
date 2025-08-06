@@ -11,12 +11,14 @@ import { X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
 
 export const AinboxManager = () => {
   const { emails, selectedEmail, setSelectedEmail } = useEmailData();
   const [selectedSection, setSelectedSection] = useState("inbox");
   const [fullscreenEmail, setFullscreenEmail] = useState<any>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [replyOpen, setReplyOpen] = useState(false);
   const { theme, setTheme } = useTheme();
 
   const renderMainContent = () => {
@@ -78,7 +80,7 @@ export const AinboxManager = () => {
         </div>
       );
       case "inbox": 
-      default: return selectedEmail ? <EmailDetail email={selectedEmail} /> : (
+      default: return selectedEmail ? <EmailDetail email={selectedEmail} onReplyOpen={setReplyOpen} /> : (
         <div className="flex-1 flex items-center justify-center bg-background">
           <div className="text-center">
             <h3 className="text-lg font-medium text-foreground mb-2">Žiadny email vybraný</h3>
@@ -109,7 +111,10 @@ export const AinboxManager = () => {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       
-      <div className="flex-1 min-w-0 overflow-hidden">
+      <div className={cn(
+        "flex-1 min-w-0 overflow-hidden transition-all duration-300 ease-in-out",
+        replyOpen ? "mr-[400px]" : ""
+      )}>
         {renderMainContent()}
       </div>
     </div>

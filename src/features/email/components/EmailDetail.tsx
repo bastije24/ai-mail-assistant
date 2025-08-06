@@ -8,7 +8,7 @@ import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import { ComposeEmailReply } from "./ComposeEmailReply";
 import type { Email, EmailDetailProps } from "../types";
 
-export const EmailDetail = ({ email }: EmailDetailProps) => {
+export const EmailDetail = ({ email, onReplyOpen }: EmailDetailProps) => {
   const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('sk-SK', {
@@ -112,7 +112,10 @@ export const EmailDetail = ({ email }: EmailDetailProps) => {
         <div className="max-w-4xl mx-auto flex items-center gap-3">
           <Button 
             className="bg-ai-primary hover:bg-ai-primary/90"
-            onClick={() => setReplyDialogOpen(true)}
+            onClick={() => {
+              setReplyDialogOpen(true);
+              onReplyOpen?.(true);
+            }}
           >
             <Reply className="mr-2 h-4 w-4" />
             Odpovedať
@@ -156,7 +159,10 @@ export const EmailDetail = ({ email }: EmailDetailProps) => {
       <ComposeEmailReply 
         email={email}
         open={replyDialogOpen}
-        onOpenChange={setReplyDialogOpen}
+        onOpenChange={(open) => {
+          setReplyDialogOpen(open);
+          onReplyOpen?.(open);
+        }}
       />
     </div>
   );

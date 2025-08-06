@@ -19,4 +19,5 @@ export interface EmailListProps {
 
 export interface EmailDetailProps {
   email: Email;
+  onReplyOpen?: (open: boolean) => void;
 }
