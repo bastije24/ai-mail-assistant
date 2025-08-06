@@ -78,7 +78,14 @@ export const AinboxManager = () => {
         </div>
       );
       case "inbox": 
-      default: return <EmailDetail email={selectedEmail} />;
+      default: return selectedEmail ? <EmailDetail email={selectedEmail} /> : (
+        <div className="flex-1 flex items-center justify-center bg-background">
+          <div className="text-center">
+            <h3 className="text-lg font-medium text-foreground mb-2">Žiadny email vybraný</h3>
+            <p className="text-muted-foreground">Vyberte email zo zoznamu pre zobrazenie detailov</p>
+          </div>
+        </div>
+      );
     }
   };
 
