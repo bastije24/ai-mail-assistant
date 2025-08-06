@@ -108,35 +108,27 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
         </SheetHeader>
         
         <div className="flex-1 overflow-y-auto space-y-6 py-4">
-          {/* Original Email Context */}
-          <Card className="bg-muted/50">
-            <CardContent className="p-4">
-              <div className="text-sm">
-                <div className="font-medium mb-1">Od: {email.from} &lt;{email.fromEmail}&gt;</div>
-                <div className="text-muted-foreground mb-2">Predmet: {email.subject}</div>
-                <div className="text-muted-foreground max-h-20 overflow-y-auto">
-                  {email.content}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* AI Concept Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">AI návrhy odpovede</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {aiConcepts.map((concept) => (
                 <Button
                   key={concept.id}
                   variant={selectedConceptId === concept.id ? "default" : "outline"}
-                  className="h-auto p-3 justify-start text-left"
+                  className="h-auto p-4 justify-start text-left whitespace-pre-line"
                   onClick={() => handleConceptSelect(concept.id)}
                 >
-                  <div className="flex items-center gap-2">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                  <div className="flex items-start gap-3 w-full">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
                       {concept.id}
                     </div>
-                    <span className="text-sm">{concept.type}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-sm mb-1">{concept.type}</div>
+                      <div className="text-xs text-muted-foreground leading-relaxed">
+                        {concept.template}
+                      </div>
+                    </div>
                   </div>
                 </Button>
               ))}
