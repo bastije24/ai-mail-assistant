@@ -1,8 +1,10 @@
-import { Tag, Zap, Users, Briefcase, Heart, AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { Tag, Zap, Users, Briefcase, Heart, AlertCircle, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
+import { CreateAiTagDialog } from "@/features/email/components/CreateAiTagDialog";
 
 interface Email {
   id: string;
@@ -17,6 +19,20 @@ interface AiTaggingProps {
 }
 
 export const AiTagging = ({ emails }: AiTaggingProps) => {
+  const [customTags, setCustomTags] = useState<any[]>([]);
+  
+  const handleTagCreate = (newTag: { name: string; description: string; icon: string; keywords: string[] }) => {
+    const tagWithStats = {
+      ...newTag,
+      icon: Tag, // Default icon for custom tags
+      color: "bg-gray-100 text-gray-800 border-gray-200",
+      count: 0,
+      accuracy: 85,
+      emails: []
+    };
+    setCustomTags(prev => [...prev, tagWithStats]);
+  };
+
   const tagCategories = [
     {
       name: "Urgentné",
@@ -111,9 +127,17 @@ export const AiTagging = ({ emails }: AiTaggingProps) => {
 
       {/* Tag Categories Overview */}
       <div className="grid gap-4">
-        <h2 className="text-lg font-medium text-foreground">Kategórie tagov</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-medium text-foreground">Kategórie tagov</h2>
+          <CreateAiTagDialog onTagCreate={handleTagCreate}>
+            <Button size="sm" className="bg-ai-primary hover:bg-ai-primary/90">
+              <Plus className="mr-2 h-4 w-4" />
+              Nový AI tag
+            </Button>
+          </CreateAiTagDialog>
+        </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tagCategories.map((category) => (
+          {[...tagCategories, ...customTags].map((category) => (
             <Card key={category.name} className="hover:shadow-sm transition-shadow">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
