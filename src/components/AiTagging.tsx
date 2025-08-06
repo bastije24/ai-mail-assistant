@@ -109,7 +109,8 @@ export const AiTagging = ({ emails }: AiTaggingProps) => {
   ];
 
   const getTagColor = (tagName: string) => {
-    const category = tagCategories.find(cat => cat.name === tagName);
+    const allCategories = [...tagCategories, ...customTags];
+    const category = allCategories.find(cat => cat.name === tagName);
     return category ? category.color : "bg-gray-100 text-gray-800 border-gray-200";
   };
 
