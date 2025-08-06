@@ -176,6 +176,10 @@ export const AiTagging = ({ emails }: AiTaggingProps) => {
                   onClick={() => {
                     // Simulujeme zobrazenie všetkých emailov v kategórii
                     console.log(`Zobrazujem všetky emaily v kategórii: ${category.name}`);
+                    // Trigger an action to show all emails for this category
+                    window.dispatchEvent(new CustomEvent('showEmailsForCategory', {
+                      detail: { category: category.name, emails: category.emails }
+                    }));
                   }}
                 >
                   Zobraz všetky

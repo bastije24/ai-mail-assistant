@@ -188,7 +188,7 @@ export const Drafts = ({ emails }: EmailListProps) => {
           <h2 className="text-lg font-medium text-foreground">Moje drafty</h2>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-96 overflow-y-auto">
           {drafts.map((draft) => {
             const statusInfo = getStatusInfo(draft.status);
             const StatusIcon = statusInfo.icon;

@@ -71,6 +71,10 @@ export const Trash = ({ emails }: EmailListProps) => {
                         size="sm" 
                         variant="ghost"
                         title="Obnoviť email"
+                        onClick={() => {
+                          console.log(`Restoring email ${email.id}`);
+                          // Restore functionality would be implemented here
+                        }}
                       >
                         <RotateCcw className="h-3 w-3" />
                       </Button>
@@ -78,6 +82,10 @@ export const Trash = ({ emails }: EmailListProps) => {
                         size="sm" 
                         variant="ghost"
                         title="Odstrániť natrvalo"
+                        onClick={() => {
+                          console.log(`Permanently deleting email ${email.id}`);
+                          // Permanent delete functionality would be implemented here
+                        }}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>

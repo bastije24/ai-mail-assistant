@@ -274,12 +274,30 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                   : `${selectedDateEvents.length} ${selectedDateEvents.length === 1 ? 'udalosť' : selectedDateEvents.length < 5 ? 'udalosti' : 'udalostí'}`}
               </p>
             </div>
-            <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
-              <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
-                <Plus className="mr-2 h-4 w-4" />
-                Pridať
-              </Button>
-            </NewMeetingDialog>
+            <div className="flex items-center gap-3">
+              {/* Deadlines filter dropdown */}
+              <select 
+                className="px-3 py-2 border border-border rounded-md text-sm bg-background"
+                onChange={(e) => {
+                  const timeframe = e.target.value;
+                  console.log(`Filtering deadlines for: ${timeframe}`);
+                  // Here would be the filtering logic for deadlines
+                }}
+              >
+                <option value="">Všetky termíny</option>
+                <option value="today">Dnes</option>
+                <option value="tomorrow">Zajtra</option>
+                <option value="next-week">Nasledný týždeň</option>
+                <option value="next-month">Nasledný mesiac</option>
+              </select>
+              
+              <NewMeetingDialog onMeetingCreate={handleMeetingCreate}>
+                <Button size="sm" className="bg-gray-900 hover:bg-gray-800 text-white">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Pridať
+                </Button>
+              </NewMeetingDialog>
+            </div>
           </div>
 
           <div className="space-y-4">

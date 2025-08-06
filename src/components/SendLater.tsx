@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Send, Clock, FileEdit, Archive, Star } from "lucide-react";
+import { Send, Clock, FileEdit, Archive, Star, MoreVertical } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -171,15 +172,16 @@ export const SendLater = ({ emails }: SendLaterProps) => {
           </ComposeEmailDialog>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-96 overflow-y-auto">
           {scheduledEmails.map((email) => (
             <Card 
               key={email.id} 
-              className={`hover:shadow-sm transition-shadow ${
+              className={`hover:shadow-sm transition-shadow cursor-pointer ${
                 email.status === "sent" ? "opacity-75" : ""
               } ${
                 email.status === "scheduled" ? "border-l-4 border-l-emerald-500" : ""
               }`}
+              onClick={() => console.log(`Opening email detail for ${email.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
@@ -210,6 +212,53 @@ export const SendLater = ({ emails }: SendLaterProps) => {
                       <Badge className={getCategoryColor(email.category)}>
                         {email.category}
                       </Badge>
+                      {/* Three dots menu for options */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            className="h-6 w-6 p-0"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreVertical className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            console.log(`Editing email ${email.id}`);
+                          }}>
+                            <FileEdit className="mr-2 h-4 w-4" />
+                            Upraviť
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            console.log(`Changing time for email ${email.id}`);
+                          }}>
+                            <Clock className="mr-2 h-4 w-4" />
+                            Zmeniť čas
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => {
+                            e.stopPropagation();
+                            handleSendNow(email.id);
+                          }}>
+                            <Send className="mr-2 h-4 w-4" />
+                            Odoslať teraz
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleArchive(email.id);
+                            }}
+                            className="text-red-600"
+                          >
+                            <Archive className="mr-2 h-4 w-4" />
+                            Archivovať
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="h-3 w-3 text-muted-foreground" />
@@ -217,53 +266,25 @@ export const SendLater = ({ emails }: SendLaterProps) => {
                         {formatScheduledTime(email.scheduledFor)}
                       </span>
                     </div>
+                    {/* Mark as done button */}
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="text-xs h-6"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleArchive(email.id);
+                      }}
+                    >
+                      Hotovo
+                    </Button>
                   </div>
                 </div>
 
-                {email.status === "scheduled" && (
-                  <div className="flex items-center gap-2 pt-2 border-t border-border">
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => console.log(`Upravujem email ${email.id}`)}
-                    >
-                      <FileEdit className="mr-2 h-3 w-3" />
-                      Upraviť
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      onClick={() => console.log(`Mením čas pre email ${email.id}`)}
-                    >
-                      <Clock className="mr-2 h-3 w-3" />
-                      Zmeniť čas
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                      onClick={() => handleSendNow(email.id)}
-                    >
-                      <Send className="mr-2 h-3 w-3" />
-                      Odoslať teraz
-                    </Button>
-                  </div>
-                )}
-
                 {email.status === "sent" && (
-                  <div className="flex items-center gap-2 pt-2 border-t border-border">
-                    <div className="flex items-center gap-1 text-sm text-green-600">
-                      <Star className="h-3 w-3" />
-                      <span>Úspešne odoslané</span>
-                    </div>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      className="ml-auto"
-                      onClick={() => handleArchive(email.id)}
-                    >
-                      <Archive className="mr-2 h-3 w-3" />
-                      Archivovať
-                    </Button>
+                  <div className="flex items-center gap-1 text-sm text-green-600 pt-2 border-t border-border">
+                    <Star className="h-3 w-3" />
+                    <span>Úspešne odoslané</span>
                   </div>
                 )}
               </CardContent>

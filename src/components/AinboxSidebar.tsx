@@ -40,9 +40,10 @@ interface AinboxSidebarProps {
   onSectionChange: (section: string) => void;
   isOpen?: boolean;
   onToggle?: () => void;
+  emails?: any[];
 }
 
-export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true, onToggle }: AinboxSidebarProps) => {
+export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true, onToggle, emails = [] }: AinboxSidebarProps) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [activeSettingsSection, setActiveSettingsSection] = useState("profile");
   const [editingProfile, setEditingProfile] = useState(false);
@@ -85,7 +86,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true,
   ];
 
   const mainItems = [
-    { id: "trash", label: "Kôš", icon: Trash2, count: 3 },
+    { id: "trash", label: "Kôš", icon: Trash2, count: emails.filter(e => e.status === "deleted").length },
     { id: "settings", label: "Nastavenia", icon: Settings },
   ];
 

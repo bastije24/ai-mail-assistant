@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Archive, Trash2, Search, Filter, Reply, Eye, Tag, MoreVertical } from "lucide-react";
+import { Mail, Archive, Trash2, Search, Filter, Reply, Eye, Tag, MoreVertical, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,7 @@ export const AllEmails = ({ emails }: EmailListProps) => {
       timestamp: new Date("2024-01-13T09:15:00"),
       isRead: true,
       isUrgent: false,
+      isStarred: false,
       status: "read"
     },
     {
@@ -43,6 +44,7 @@ export const AllEmails = ({ emails }: EmailListProps) => {
       timestamp: new Date("2024-01-12T16:30:00"),
       isRead: false,
       isUrgent: true,
+      isStarred: true,
       status: "unread"
     },
     {
@@ -55,6 +57,7 @@ export const AllEmails = ({ emails }: EmailListProps) => {
       timestamp: new Date("2024-01-11T08:00:00"),
       isRead: true,
       isUrgent: false,
+      isStarred: false,
       status: "read"
     }
   ];
@@ -205,6 +208,22 @@ export const AllEmails = ({ emails }: EmailListProps) => {
                   <span className="text-xs text-muted-foreground">{formatDate(email.timestamp)}</span>
                   
                   <div className="flex items-center gap-1">
+                    {/* Star button for important emails */}
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => {
+                        const email = allEmailsData.find(e => e.id === email.id);
+                        const isStarred = (email as any)?.isStarred || false;
+                        console.log(`${isStarred ? 'Removing' : 'Adding'} star for email ${email.id}`);
+                        // Toggle star functionality would be implemented here
+                      }}
+                       title={(email as any).isStarred ? "Odobrať hviezdičku" : "Pridať hviezdičku"}
+                       className={(email as any).isStarred ? "text-yellow-500 hover:text-yellow-600" : ""}
+                    >
+                      <Star className={`h-3 w-3 ${(email as any).isStarred ? 'fill-current' : ''}`} />
+                    </Button>
+                    
                     <Button 
                       size="sm" 
                       variant="ghost"

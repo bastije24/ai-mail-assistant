@@ -109,6 +109,7 @@ export const AinboxManager = () => {
         }}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        emails={emails}
       />
       
       <div className={cn(
