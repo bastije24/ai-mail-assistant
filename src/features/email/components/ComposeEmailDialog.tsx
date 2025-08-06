@@ -102,7 +102,7 @@ export const ComposeEmailDialog = ({
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
-      <SheetContent side="right" className="w-[600px] sm:w-[600px] overflow-y-auto">
+      <SheetContent side="right" className="w-[600px] sm:w-[600px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader>
           <SheetTitle>Nový email</SheetTitle>
         </SheetHeader>
