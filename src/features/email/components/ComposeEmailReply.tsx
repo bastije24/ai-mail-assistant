@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetPortal } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -135,222 +134,230 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetPortal>
-        <SheetContent 
-          side="right" 
-          className="w-[600px] sm:w-[600px] max-w-[90vw] resize-x overflow-auto flex flex-col border-l shadow-lg bg-background z-50" 
-          onInteractOutside={(e) => e.preventDefault()}
-          style={{ position: 'fixed', top: 0, right: open ? 0 : '-600px', height: '100vh', transition: 'right 0.3s ease' }}
+    <div 
+      className={cn(
+        "fixed top-0 right-0 h-full w-[600px] max-w-[90vw] bg-background border-l shadow-xl flex flex-col z-50 transition-transform duration-300 ease-in-out",
+        open ? "translate-x-0" : "translate-x-full"
+      )}
+    >
+      {/* Header */}
+      <div className="flex-shrink-0 border-b p-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">AI Odpovede</h2>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onOpenChange(false)}
+          className="h-8 w-8 p-0"
         >
-          <SheetHeader className="flex-shrink-0">
-            <SheetTitle>AI Odpovede</SheetTitle>
-          </SheetHeader>
-        
-        <div className="flex-1 overflow-y-auto space-y-3 py-3">
-          <div className="space-y-2">
-            <Label className="text-xs font-medium">AI návrhy odpovede</Label>
-            <div className="grid grid-cols-1 gap-1">
-              {aiConcepts.map((concept) => (
-                <Button
-                  key={concept.id}
-                  variant={selectedConceptId === concept.id ? "default" : "outline"}
-                  className="h-auto p-2 justify-start text-left"
-                  onClick={() => handleConceptSelect(concept.id)}
-                >
-                  <div className="flex items-start gap-2 w-full">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
-                      {concept.id}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-xs mb-0.5">{concept.type}</div>
-                      <div className="text-xs text-muted-foreground line-clamp-2">
-                        {concept.template}
-                      </div>
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto space-y-3 p-4">
+        {/* AI Concept Selection */}
+        <div className="space-y-2">
+          <Label className="text-xs font-medium">AI návrhy odpovede</Label>
+          <div className="grid grid-cols-1 gap-1">
+            {aiConcepts.map((concept) => (
+              <Button
+                key={concept.id}
+                variant={selectedConceptId === concept.id ? "default" : "outline"}
+                className="h-auto p-2 justify-start text-left"
+                onClick={() => handleConceptSelect(concept.id)}
+              >
+                <div className="flex items-start gap-2 w-full">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                    {concept.id}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-xs mb-0.5">{concept.type}</div>
+                    <div className="text-xs text-muted-foreground line-clamp-2">
+                      {concept.template}
                     </div>
                   </div>
-                </Button>
+                </div>
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Context Input for AI Generation */}
+        <div className="space-y-1">
+          <Label htmlFor="context-input" className="text-xs">Kontext pre AI odpovede</Label>
+          <Textarea
+            id="context-input"
+            value={contextInput}
+            onChange={(e) => setContextInput(e.target.value)}
+            placeholder="Napríklad: 'už nie je k dispozícii', 'termín sa posunul'..."
+            rows={1}
+            className="text-xs h-8 min-h-8 py-1"
+          />
+          <p className="text-xs text-muted-foreground leading-tight">
+            Napíšte informáciu a všetky 4 odpovede sa automaticky prehodia
+          </p>
+        </div>
+
+        {/* Reply Content */}
+        <div className="space-y-1">
+          <Label htmlFor="reply-content" className="text-xs">Finálna odpoveď</Label>
+          <Textarea
+            id="reply-content"
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
+            placeholder="Tu sa zobrazí finálna odpoveď na odoslanie..."
+            rows={4}
+            className="min-h-[80px] text-xs"
+          />
+        </div>
+
+        {/* Attachments */}
+        <div className="space-y-1">
+          <Label className="text-xs">Prílohy</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="file"
+              multiple
+              onChange={handleFileUpload}
+              className="hidden"
+              id="reply-file-upload"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => document.getElementById('reply-file-upload')?.click()}
+            >
+              <Paperclip className="mr-2 h-3 w-3" />
+              Pridať
+            </Button>
+            {attachments.length > 0 && (
+              <span className="text-xs text-muted-foreground">
+                {attachments.length} súborov
+              </span>
+            )}
+          </div>
+          {attachments.length > 0 && (
+            <div className="space-y-1">
+              {attachments.map((file, index) => (
+                <div key={index} className="flex items-center justify-between p-1 bg-muted rounded text-xs">
+                  <span>{file.name}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeAttachment(index)}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
               ))}
             </div>
-          </div>
+          )}
+        </div>
 
-          {/* Context Input for AI Generation */}
-          <div className="space-y-1">
-            <Label htmlFor="context-input" className="text-xs">Kontext pre AI odpovede</Label>
-            <Textarea
-              id="context-input"
-              value={contextInput}
-              onChange={(e) => setContextInput(e.target.value)}
-              placeholder="Napríklad: 'už nie je k dispozícii', 'termín sa posunul'..."
-              rows={1}
-              className="text-xs h-8 min-h-8 py-1"
-            />
-            <p className="text-xs text-muted-foreground leading-tight">
-              Napíšte informáciu a všetky 4 odpovede sa automaticky prehodia
-            </p>
-          </div>
-
-          {/* Reply Content */}
-          <div className="space-y-1">
-            <Label htmlFor="reply-content" className="text-xs">Finálna odpoveď</Label>
-            <Textarea
-              id="reply-content"
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.target.value)}
-              placeholder="Tu sa zobrazí finálna odpoveď na odoslanie..."
-              rows={4}
-              className="min-h-[80px] text-xs"
-            />
-          </div>
-
-          {/* Attachments */}
-          <div className="space-y-2">
-            <Label>Prílohy</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="file"
-                multiple
-                onChange={handleFileUpload}
-                className="hidden"
-                id="reply-file-upload"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('reply-file-upload')?.click()}
-              >
-                <Paperclip className="mr-2 h-4 w-4" />
-                Pridať prílohy
-              </Button>
-              {attachments.length > 0 && (
-                <span className="text-sm text-muted-foreground">
-                  {attachments.length} súborov
-                </span>
-              )}
-            </div>
-            {attachments.length > 0 && (
-              <div className="space-y-1">
-                {attachments.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded">
-                    <span className="text-sm">{file.name}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeAttachment(index)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Meeting Creation */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setShowMeetingOptions(!showMeetingOptions)}
-              >
-                <Calendar className="mr-2 h-4 w-4" />
-                Navrhnúť stretnutie
-              </Button>
-            </div>
-            
-            {showMeetingOptions && (
-              <div className="p-4 border rounded-lg space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Dátum stretnutia</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !meetingDate && "text-muted-foreground"
-                          )}
-                        >
-                          <Calendar className="mr-2 h-4 w-4" />
-                          {meetingDate ? format(meetingDate, "dd.MM.yyyy") : "Vyberte dátum"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <CalendarComponent
-                          mode="single"
-                          selected={meetingDate}
-                          onSelect={setMeetingDate}
-                          initialFocus
-                          className="pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="meeting-time">Čas stretnutia</Label>
-                    <Input
-                      id="meeting-time"
-                      type="time"
-                      value={meetingTime}
-                      onChange={(e) => setMeetingTime(e.target.value)}
-                    />
-                  </div>
+        {/* Meeting Creation */}
+        <div className="space-y-1">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowMeetingOptions(!showMeetingOptions)}
+          >
+            <Calendar className="mr-2 h-3 w-3" />
+            Navrhnúť stretnutie
+          </Button>
+          
+          {showMeetingOptions && (
+            <div className="p-2 border rounded space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <Label className="text-xs">Dátum</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={cn(
+                          "w-full justify-start text-left font-normal text-xs",
+                          !meetingDate && "text-muted-foreground"
+                        )}
+                      >
+                        <Calendar className="mr-1 h-3 w-3" />
+                        {meetingDate ? format(meetingDate, "dd.MM.yyyy") : "Dátum"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={meetingDate}
+                        onSelect={setMeetingDate}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowMeetingOptions(false)}
-                  >
-                    Zrušiť
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={handleCreateMeeting}
-                  >
-                    Vytvoriť stretnutie
-                  </Button>
+                <div className="space-y-1">
+                  <Label htmlFor="meeting-time" className="text-xs">Čas</Label>
+                  <Input
+                    id="meeting-time"
+                    type="time"
+                    value={meetingTime}
+                    onChange={(e) => setMeetingTime(e.target.value)}
+                    className="text-xs h-8"
+                  />
                 </div>
               </div>
-            )}
-          </div>
+              
+              <div className="flex gap-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowMeetingOptions(false)}
+                  className="text-xs"
+                >
+                  Zrušiť
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleCreateMeeting}
+                  className="text-xs"
+                >
+                  Vytvoriť
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Fixed Actions at bottom */}
+      <div className="flex-shrink-0 border-t p-3 space-y-2">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="text-xs">
+            <Sparkles className="mr-1 h-3 w-3" />
+            Vylepšiť AI
+          </Button>
+          <Button variant="outline" size="sm" className="text-xs">
+            Kontrola gramatiky
+          </Button>
         </div>
 
-        {/* Fixed Actions at bottom */}
-        <div className="flex-shrink-0 border-t p-4 space-y-4">
-          {/* AI Enhancement */}
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Sparkles className="mr-2 h-4 w-4" />
-              Vylepšiť AI
-            </Button>
-            <Button variant="outline" size="sm">
-              Kontrola gramatiky
-            </Button>
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Zrušiť
-            </Button>
-            <Button onClick={handleSend} disabled={!replyContent.trim()}>
-              <Send className="mr-2 h-4 w-4" />
-              Odoslať odpoveď
-            </Button>
-          </div>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} size="sm" className="text-xs">
+            Zrušiť
+          </Button>
+          <Button onClick={handleSend} disabled={!replyContent.trim()} size="sm" className="text-xs">
+            <Send className="mr-1 h-3 w-3" />
+            Odoslať
+          </Button>
         </div>
-        </SheetContent>
-      </SheetPortal>
-    </Sheet>
+      </div>
+    </div>
   );
 };
