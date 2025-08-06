@@ -24,31 +24,6 @@ Jan`,
     isUrgent: true,
     status: "unread",
   },
-  {
-    id: "2", 
-    from: "Mária Svobodová",
-    fromEmail: "maria.svobodova@consulting.com",
-    to: ["martin.kovac@email.com", "team@company.com"],
-    subject: "Stretnutie budúci týždeň - návrh termínov",
-    content: `Ahoj Martin,
-
-ďakujem za včerajšiu prezentáciu. Bola veľmi inšpiratívna a všetci sme si odniesli veľa nových nápadov.
-
-Chceli by sme naplánovať následné stretnutie, kde by sme prebrali konkrétne kroky. Vyhovovali by ti niektoré z týchto termínov?
-
-- Utorok 23.1. o 14:00
-- Streda 24.1. o 10:00  
-- Štvrtok 25.1. o 16:00
-
-Daj mi prosím vedieť, čo ti vyhovuje.
-
-S pozdravom,
-Mária`,
-    timestamp: new Date("2024-01-14T11:20:00"),
-    isRead: true,
-    isUrgent: false,
-    status: "read",
-  },
 ];
 
 export const useEmailData = () => {

@@ -30,22 +30,22 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
     {
       id: "A",
       type: "Rýchla odpoveď",
-      template: "Ďakujem za váš email. Potvrzujem termín a zaručujem dokončenie do piatku. Ozvem sa s aktualizáciou."
+      template: "Dobrý deň Jan,\n\nďakujem za email. Áno, potvrzujem že materiály budú hotové do piatka do 17:00. Všetko je na dobrej ceste.\n\nS pozdravom,\nMartin"
     },
     {
       id: "B", 
-      type: "Odpoveď s detailmi",
-      template: "Ďakujem za váš email. Rád by som vám poskytol detailný prehľad stavu projektu:\n\n1. Aktuálny stav: 85% dokončené\n2. Zostávajúce úlohy: finálne testovanie a dokumentácia\n3. Predpokladané ukončenie: piatok 19.1.2024\n\nBudem vás priebežne informovať o pokroku."
+      type: "Detailná odpoveď",
+      template: "Dobrý deň Jan,\n\nďakujem za email ohľadom urgentného deadlinu. Rád by som vám poskytol aktualizáciu:\n\n• Finálne materiály: 90% dokončené\n• Schválenie zmien: čakám na posledné review\n• Odovzdanie: piatok do 16:00\n\nBudem vás informovať o každom kroku.\n\nS pozdravom,\nMartin"
     },
     {
       id: "C",
-      type: "Empatická odpoveď", 
-      template: "Rozumiem urgentnosti tejto situácie a oceňujem vaše dôveruje v náš tím. Môžem vás uistiť, že projekt má najvyššiu prioritu a všetko robíme pre dodržanie termínu. Navrhujeme kratšie kontrolné stretnutie zajtra, aby sme sa uistili, že všetko prebieha podľa plánu."
+      type: "Profesionálna odpoveď", 
+      template: "Vážený pán Novák,\n\nberiem na vedomie urgentnosť projektu a môžem potvrdiť dodržanie stanoveného termínu. Finálne materiály budú pripravené do piatka.\n\nV prípade akýchkoľvek otázok ma neváhajte kontaktovať.\n\nS úctou,\nMartin Kováč"
     },
     {
       id: "D",
-      type: "Formálna odpoveď",
-      template: "Vážený pán/pani,\n\nďakujeme za váš email z dňa 15.1.2024. Na základe aktuálneho stavu projektu môžeme potvrdiť dodržanie stanoveného termínu 19.1.2024.\n\nPre akékoľvek dodatočné otázky nás neváhajte kontaktovať.\n\nS pozdravom,\n[Vaše meno]"
+      type: "Osobná odpoveď",
+      template: "Ahoj Jan,\n\nrozumiem že je to hot a urgentné! Materiály budú hotové určite do piatka, už na tom pracujem. Klient môže byť v kľude.\n\nOzvem sa ti hneď ako budem mať všetko hotové.\n\nMartin"
     }
   ];
 
