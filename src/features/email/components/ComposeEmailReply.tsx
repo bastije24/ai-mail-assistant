@@ -30,22 +30,22 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
     {
       id: "A",
       type: "Rýchla odpoveď",
-      template: "Dobrý deň Jan,\n\nďakujem za email. Áno, potvrzujem že materiály budú hotové do piatka do 17:00. Všetko je na dobrej ceste.\n\nS pozdravom,\nMartin"
+      template: "Dobrý deň Jan, áno potvrzujem - materiály budú hotové do piatka do 17:00. Všetko je na dobrej ceste. S pozdravom, Martin"
     },
     {
       id: "B", 
       type: "Detailná odpoveď",
-      template: "Dobrý deň Jan,\n\nďakujem za email ohľadom urgentného deadlinu. Rád by som vám poskytol aktualizáciu:\n\n• Finálne materiály: 90% dokončené\n• Schválenie zmien: čakám na posledné review\n• Odovzdanie: piatok do 16:00\n\nBudem vás informovať o každom kroku.\n\nS pozdravom,\nMartin"
+      template: "Dobrý deň Jan, materiály sú 90% hotové, schválenie čaká na review. Odovzdanie: piatok do 16:00. Budem informovať o progrese. S pozdravom, Martin"
     },
     {
       id: "C",
       type: "Profesionálna odpoveď", 
-      template: "Vážený pán Novák,\n\nberiem na vedomie urgentnosť projektu a môžem potvrdiť dodržanie stanoveného termínu. Finálne materiály budú pripravené do piatka.\n\nV prípade akýchkoľvek otázok ma neváhajte kontaktovať.\n\nS úctou,\nMartin Kováč"
+      template: "Vážený pán Novák, beriem na vedomie urgentnosť a potvrzujem dodržanie termínu. Finálne materiály budú pripravené do piatka. S úctou, Martin Kováč"
     },
     {
       id: "D",
       type: "Osobná odpoveď",
-      template: "Ahoj Jan,\n\nrozumiem že je to hot a urgentné! Materiály budú hotové určite do piatka, už na tom pracujem. Klient môže byť v kľude.\n\nOzvem sa ti hneď ako budem mať všetko hotové.\n\nMartin"
+      template: "Ahoj Jan, rozumiem že je to urgentné! Materiály budú hotové určite do piatka. Klient môže byť v kľude. Ozvem sa hneď ako budem hotový. Martin"
     }
   ];
 
@@ -111,21 +111,21 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
           {/* AI Concept Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">AI návrhy odpovede</Label>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-2">
               {aiConcepts.map((concept) => (
                 <Button
                   key={concept.id}
                   variant={selectedConceptId === concept.id ? "default" : "outline"}
-                  className="h-auto p-4 justify-start text-left whitespace-pre-line"
+                  className="h-auto p-3 justify-start text-left"
                   onClick={() => handleConceptSelect(concept.id)}
                 >
-                  <div className="flex items-start gap-3 w-full">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
+                  <div className="flex items-start gap-2 w-full">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
                       {concept.id}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm mb-1">{concept.type}</div>
-                      <div className="text-xs text-muted-foreground leading-relaxed">
+                      <div className="font-medium text-xs mb-1">{concept.type}</div>
+                      <div className="text-xs text-muted-foreground">
                         {concept.template}
                       </div>
                     </div>
