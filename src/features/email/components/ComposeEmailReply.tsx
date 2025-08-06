@@ -25,29 +25,68 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
   const [meetingDate, setMeetingDate] = useState<Date>();
   const [meetingTime, setMeetingTime] = useState("");
   const [showMeetingOptions, setShowMeetingOptions] = useState(false);
+  const [contextInput, setContextInput] = useState("");
 
-  const aiConcepts = [
-    {
-      id: "A",
-      type: "Rýchla odpoveď",
-      template: "Dobrý deň Jan, áno potvrzujem - materiály budú hotové do piatka do 17:00. Všetko je na dobrej ceste. S pozdravom, Martin"
-    },
-    {
-      id: "B", 
-      type: "Detailná odpoveď",
-      template: "Dobrý deň Jan, materiály sú 90% hotové, schválenie čaká na review. Odovzdanie: piatok do 16:00. Budem informovať o progrese. S pozdravom, Martin"
-    },
-    {
-      id: "C",
-      type: "Profesionálna odpoveď", 
-      template: "Vážený pán Novák, beriem na vedomie urgentnosť a potvrzujem dodržanie termínu. Finálne materiály budú pripravené do piatka. S úctou, Martin Kováč"
-    },
-    {
-      id: "D",
-      type: "Osobná odpoveď",
-      template: "Ahoj Jan, rozumiem že je to urgentné! Materiály budú hotové určite do piatka. Klient môže byť v kľude. Ozvem sa hneď ako budem hotový. Martin"
+  const getAiConcepts = (context: string) => {
+    const baseResponses = {
+      A: "Dobrý deň Jan, áno potvrzujem - materiály budú hotové do piatka do 17:00. Všetko je na dobrej ceste. S pozdravom, Martin",
+      B: "Dobrý deň Jan, materiály sú 90% hotové, schválenie čaká na review. Odovzdanie: piatok do 16:00. Budem informovať o progrese. S pozdravom, Martin", 
+      C: "Vážený pán Novák, beriem na vedomie urgentnosť a potvrzujem dodržanie termínu. Finálne materiály budú pripravené do piatka. S úctou, Martin Kováč",
+      D: "Ahoj Jan, rozumiem že je to urgentné! Materiály budú hotové určite do piatka. Klient môže byť v kľude. Ozvem sa hneď ako budem hotový. Martin"
+    };
+
+    if (context.trim()) {
+      // Generate contextual responses based on input
+      return [
+        {
+          id: "A",
+          type: "Rýchla odpoveď",
+          template: `Dobrý deň Jan, ${context}. Ďakujem za pochopenie. S pozdravom, Martin`
+        },
+        {
+          id: "B", 
+          type: "Detailná odpoveď",
+          template: `Dobrý deň Jan, rád by som vás informoval že ${context}. Ospravedlňujem sa za akékoľvek nepríjemnosti. Teším sa na ďalšiu spoluprácu. S pozdravom, Martin`
+        },
+        {
+          id: "C",
+          type: "Profesionálna odpoveď", 
+          template: `Vážený pán Novák, týmto vás informujem že ${context}. Ďakujem za váš záujem a pochopenie. S úctou, Martin Kováč`
+        },
+        {
+          id: "D",
+          type: "Osobná odpoveď",
+          template: `Ahoj Jan, bohužiaľ ${context}. Je mi to ľúto, ale verím že sa čoskoro nájde iné riešenie. Martin`
+        }
+      ];
     }
-  ];
+
+    // Default responses
+    return [
+      {
+        id: "A",
+        type: "Rýchla odpoveď",
+        template: baseResponses.A
+      },
+      {
+        id: "B", 
+        type: "Detailná odpoveď",
+        template: baseResponses.B
+      },
+      {
+        id: "C",
+        type: "Profesionálna odpoveď", 
+        template: baseResponses.C
+      },
+      {
+        id: "D",
+        type: "Osobná odpoveď",
+        template: baseResponses.D
+      }
+    ];
+  };
+
+  const aiConcepts = getAiConcepts(contextInput);
 
   const selectedConcept = aiConcepts.find(c => c.id === selectedConceptId);
 
@@ -108,6 +147,22 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
         </SheetHeader>
         
         <div className="flex-1 overflow-y-auto space-y-6 py-4">
+          {/* Context Input for AI Generation */}
+          <div className="space-y-2">
+            <Label htmlFor="context-input">Kontext pre AI odpovede</Label>
+            <Textarea
+              id="context-input"
+              value={contextInput}
+              onChange={(e) => setContextInput(e.target.value)}
+              placeholder="Napríklad: 'auto je už predané', 'termín sa posunul', 'projekt je zrušený'..."
+              rows={2}
+              className="text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Zadajte informáciu a AI vygeneruje 4 varianty odpovede podľa tohto kontextu
+            </p>
+          </div>
+
           {/* AI Concept Selection */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">AI návrhy odpovede</Label>
