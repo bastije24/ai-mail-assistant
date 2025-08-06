@@ -136,7 +136,7 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[800px] sm:w-[800px] flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
+      <SheetContent side="right" className="w-[600px] sm:w-[600px] max-w-[90vw] resize-x overflow-auto flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader className="flex-shrink-0">
           <SheetTitle>AI Odpovede</SheetTitle>
         </SheetHeader>
