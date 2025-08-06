@@ -102,12 +102,12 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[800px] sm:w-[800px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
-        <SheetHeader>
+      <SheetContent side="right" className="w-[800px] sm:w-[800px] flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
+        <SheetHeader className="flex-shrink-0">
           <SheetTitle>Odpoveď na: {email.subject}</SheetTitle>
         </SheetHeader>
         
-        <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto space-y-6 py-4">
           {/* Original Email Context */}
           <Card className="bg-muted/50">
             <CardContent className="p-4">
@@ -276,7 +276,10 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
               </div>
             )}
           </div>
+        </div>
 
+        {/* Fixed Actions at bottom */}
+        <div className="flex-shrink-0 border-t p-4 space-y-4">
           {/* AI Enhancement */}
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
