@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetPortal } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -136,10 +136,16 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[600px] sm:w-[600px] max-w-[90vw] resize-x overflow-auto flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
-        <SheetHeader className="flex-shrink-0">
-          <SheetTitle>AI Odpovede</SheetTitle>
-        </SheetHeader>
+      <SheetPortal>
+        <SheetContent 
+          side="right" 
+          className="w-[600px] sm:w-[600px] max-w-[90vw] resize-x overflow-auto flex flex-col border-l shadow-lg bg-background z-50" 
+          onInteractOutside={(e) => e.preventDefault()}
+          style={{ position: 'fixed', top: 0, right: open ? 0 : '-600px', height: '100vh', transition: 'right 0.3s ease' }}
+        >
+          <SheetHeader className="flex-shrink-0">
+            <SheetTitle>AI Odpovede</SheetTitle>
+          </SheetHeader>
         
         <div className="flex-1 overflow-y-auto space-y-3 py-3">
           <div className="space-y-2">
@@ -343,7 +349,8 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
             </Button>
           </div>
         </div>
-      </SheetContent>
+        </SheetContent>
+      </SheetPortal>
     </Sheet>
   );
 };
