@@ -136,7 +136,7 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
   return (
     <div 
       className={cn(
-        "fixed top-0 right-0 h-full w-[400px] max-w-[85vw] bg-background border-l shadow-xl flex flex-col z-50 transition-transform duration-300 ease-in-out",
+        "fixed top-0 right-0 h-full w-[400px] max-w-[85vw] bg-background border-l shadow-xl flex flex-col z-40 transition-transform duration-300 ease-in-out",
         open ? "translate-x-0" : "translate-x-full"
       )}
     >
