@@ -138,7 +138,7 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[800px] sm:w-[800px] flex flex-col" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader className="flex-shrink-0">
-          <SheetTitle>Odpoveď na: {email.subject}</SheetTitle>
+          <SheetTitle>AI Odpovede</SheetTitle>
         </SheetHeader>
         
         <div className="flex-1 overflow-y-auto space-y-6 py-4">
