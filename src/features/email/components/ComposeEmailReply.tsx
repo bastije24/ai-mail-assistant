@@ -170,18 +170,18 @@ export const ComposeEmailReply = ({ email, open, onOpenChange, selectedConceptId
           </div>
 
           {/* Context Input for AI Generation */}
-          <div className="space-y-2">
-            <Label htmlFor="context-input">Kontext pre AI odpovede</Label>
+          <div className="space-y-1">
+            <Label htmlFor="context-input" className="text-xs">Kontext pre AI odpovede</Label>
             <Textarea
               id="context-input"
               value={contextInput}
               onChange={(e) => setContextInput(e.target.value)}
-              placeholder="Napríklad: 'auto je už predané', 'termín sa posunul', 'projekt je zrušený'..."
-              rows={2}
-              className="text-sm"
+              placeholder="Napríklad: 'už nie je k dispozícii', 'termín sa posunul'..."
+              rows={1}
+              className="text-xs h-8 min-h-8 py-1"
             />
-            <p className="text-xs text-muted-foreground">
-              Napíšte informáciu (napr. "už nie je k dispozícii") a všetky 4 odpovede sa automaticky prehodia
+            <p className="text-xs text-muted-foreground leading-tight">
+              Napíšte informáciu a všetky 4 odpovede sa automaticky prehodia
             </p>
           </div>
 
