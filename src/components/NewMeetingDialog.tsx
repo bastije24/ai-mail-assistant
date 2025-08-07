@@ -30,21 +30,44 @@ export const NewMeetingDialog = ({ children, onMeetingCreate }: NewMeetingDialog
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.date || !formData.startTime || !formData.endTime) {
+    if (!formData.title || !formData.date) {
       return;
     }
+
+    // For deadlines, we don't require start/end time
+    if (formData.type !== "deadline" && (!formData.startTime || !formData.endTime)) {
+      return;
+    }
+
+    const getStatus = (date: Date) => {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      if (date.toDateString() === today.toDateString()) {
+        return "Dnes";
+      } else if (date.toDateString() === tomorrow.toDateString()) {
+        return "Zajtra";
+      } else {
+        return date.toLocaleDateString('sk-SK', { weekday: 'long' });
+      }
+    };
 
     const newMeeting = {
       id: Date.now().toString(),
       title: formData.title,
-      time: `${formData.startTime} - ${formData.endTime}`,
+      time: formData.type === "deadline" 
+        ? formData.startTime ? `Do ${formData.startTime}` : "Celý deň"
+        : `${formData.startTime} - ${formData.endTime}`,
       type: formData.type,
       location: formData.location || "Neurčené",
       organizer: "Vy",
-      attendees: "Nové stretnutie",
-      color: formData.type === "meeting" ? "blue" : formData.type === "presentation" ? "purple" : "green",
+      attendees: formData.type === "deadline" ? "Nový deadline" : "Nové stretnutie",
+      color: formData.type === "meeting" ? "blue" : 
+             formData.type === "presentation" ? "purple" : 
+             formData.type === "deadline" ? "red" : "green",
       date: formData.date,
-      status: "Nadchádzajúce"
+      status: getStatus(formData.date)
     };
 
     onMeetingCreate(newMeeting);
@@ -67,7 +90,9 @@ export const NewMeetingDialog = ({ children, onMeetingCreate }: NewMeetingDialog
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Nové stretnutie</DialogTitle>
+          <DialogTitle>
+            {formData.type === "deadline" ? "Nový deadline" : "Nové stretnutie"}
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -102,6 +127,7 @@ export const NewMeetingDialog = ({ children, onMeetingCreate }: NewMeetingDialog
                   selected={formData.date}
                   onSelect={(date) => setFormData({ ...formData, date })}
                   initialFocus
+                  className="pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
@@ -109,25 +135,29 @@ export const NewMeetingDialog = ({ children, onMeetingCreate }: NewMeetingDialog
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="startTime">Začiatok</Label>
+              <Label htmlFor="startTime">
+                {formData.type === "deadline" ? "Termín (voliteľný)" : "Začiatok"}
+              </Label>
               <Input
                 id="startTime"
                 type="time"
                 value={formData.startTime}
                 onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                required
+                required={formData.type !== "deadline"}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="endTime">Koniec</Label>
-              <Input
-                id="endTime"
-                type="time"
-                value={formData.endTime}
-                onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                required
-              />
-            </div>
+            {formData.type !== "deadline" && (
+              <div className="space-y-2">
+                <Label htmlFor="endTime">Koniec</Label>
+                <Input
+                  id="endTime"
+                  type="time"
+                  value={formData.endTime}
+                  onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
+                  required
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -169,7 +199,9 @@ export const NewMeetingDialog = ({ children, onMeetingCreate }: NewMeetingDialog
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Zrušiť
             </Button>
-            <Button type="submit">Vytvoriť stretnutie</Button>
+            <Button type="submit">
+              {formData.type === "deadline" ? "Vytvoriť deadline" : "Vytvoriť stretnutie"}
+            </Button>
           </div>
         </form>
       </DialogContent>
