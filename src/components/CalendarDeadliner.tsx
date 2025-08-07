@@ -251,23 +251,23 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Kalendár</CardTitle>
             </CardHeader>
-            <CardContent className="p-3">
+            <CardContent className="p-3 overflow-hidden">
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
-                className="rounded-md border-0 w-full"
+                className="rounded-md border-0 w-full pointer-events-auto"
                 classNames={{
                   months: "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-                  month: "space-y-4 w-full flex flex-col",
+                  month: "space-y-4 w-full",
                   caption: "flex justify-center pt-1 relative items-center w-full",
                   caption_label: "text-sm font-medium",
-                  table: "w-full border-collapse space-y-1",
+                  table: "w-full border-collapse",
                   head_row: "flex w-full",
-                  head_cell: "text-muted-foreground rounded-md font-normal text-[0.8rem] flex-1 flex justify-center items-center min-h-[2rem]",
-                  row: "flex w-full mt-2",
-                  cell: "text-center text-sm p-0 relative flex-1 flex justify-center items-center min-h-[2.25rem] aspect-square [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                  day: "w-full h-full min-h-[2.25rem] aspect-square p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors flex items-center justify-center text-xs sm:text-sm",
+                  head_cell: "text-muted-foreground rounded-md font-normal text-[0.7rem] sm:text-[0.8rem] flex-1 text-center p-1",
+                  row: "flex w-full",
+                  cell: "relative flex-1 text-center p-0.5 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                  day: "w-full aspect-square max-w-full max-h-full p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors flex items-center justify-center text-xs sm:text-sm overflow-hidden",
                   day_selected: "bg-blue-200 text-blue-900 hover:bg-blue-300 hover:text-blue-900 focus:bg-blue-200 focus:text-blue-900",
                   day_today: "bg-primary text-primary-foreground font-semibold",
                   day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
