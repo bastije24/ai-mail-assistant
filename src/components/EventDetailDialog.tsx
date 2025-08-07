@@ -49,11 +49,8 @@ export const EventDetailDialog = ({ children, event }: EventDetailDialogProps) =
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="flex items-start justify-between">
-            <span className="text-xl font-bold">{event.title}</span>
-            <Badge variant="outline" className="ml-2">
-              {event.status}
-            </Badge>
+          <DialogTitle className="text-xl font-bold">
+            {event.title}
           </DialogTitle>
         </DialogHeader>
 

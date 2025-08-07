@@ -33,6 +33,7 @@ interface CalendarDeadlinerProps {
 
 export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [deadlineFilter, setDeadlineFilter] = useState<string>("");
   const [events, setEvents] = useState([
     {
       id: "1",
@@ -125,9 +126,52 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
 
   const allEvents = events;
 
-  // Filter events for selected date
+  // Filter events for selected date with deadline filter
+  const getFilteredEvents = () => {
+    let filteredEvents = allEvents;
+    
+    if (deadlineFilter) {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      const nextMonth = new Date(today);
+      nextMonth.setMonth(today.getMonth() + 1);
+      
+      switch (deadlineFilter) {
+        case "today":
+          filteredEvents = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate.toDateString() === today.toDateString();
+          });
+          break;
+        case "tomorrow":
+          filteredEvents = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate.toDateString() === tomorrow.toDateString();
+          });
+          break;
+        case "next-week":
+          filteredEvents = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today && eventDate <= nextWeek;
+          });
+          break;
+        case "next-month":
+          filteredEvents = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today && eventDate <= nextMonth;
+          });
+          break;
+      }
+    }
+    
+    return filteredEvents;
+  };
+
   const selectedDateEvents = selectedDate 
-    ? allEvents.filter(event => {
+    ? getFilteredEvents().filter(event => {
         const eventDate = new Date(event.date);
         return eventDate.toDateString() === selectedDate.toDateString();
       })
@@ -224,8 +268,8 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                   row: "flex w-full mt-2",
                   cell: "h-9 w-full text-center text-sm p-0 relative flex-1 flex justify-center items-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
                   day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors",
-                  day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                  day_today: "bg-accent text-accent-foreground font-semibold",
+                  day_selected: "bg-blue-200 text-blue-900 hover:bg-blue-300 hover:text-blue-900 focus:bg-blue-200 focus:text-blue-900",
+                  day_today: "bg-primary text-primary-foreground font-semibold",
                   day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
                 }}
                 modifiers={{
@@ -278,10 +322,9 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
               {/* Deadlines filter dropdown */}
               <select 
                 className="px-3 py-2 border border-border rounded-md text-sm bg-background"
+                value={deadlineFilter}
                 onChange={(e) => {
-                  const timeframe = e.target.value;
-                  console.log(`Filtering deadlines for: ${timeframe}`);
-                  // Here would be the filtering logic for deadlines
+                  setDeadlineFilter(e.target.value);
                 }}
               >
                 <option value="">Všetky termíny</option>
