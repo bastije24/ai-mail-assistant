@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { ComposeEmailDialog } from "@/features/email";
+import { EditEmailDialog } from "./EditEmailDialog";
 
 interface Email {
   id: string;
@@ -122,6 +123,14 @@ export const SendLater = ({ emails }: SendLaterProps) => {
     );
   };
 
+  const handleEmailUpdate = (updatedEmail: any) => {
+    setScheduledEmails(emails => 
+      emails.map(email => 
+        email.id === updatedEmail.id ? updatedEmail : email
+      )
+    );
+  };
+
   const handleArchive = (emailId: string) => {
     setScheduledEmails(emails => emails.filter(email => email.id !== emailId));
   };
@@ -225,13 +234,15 @@ export const SendLater = ({ emails }: SendLaterProps) => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            console.log(`Editing email ${email.id}`);
-                          }}>
-                            <FileEdit className="mr-2 h-4 w-4" />
-                            Upraviť
-                          </DropdownMenuItem>
+                          <EditEmailDialog email={email} onEmailUpdate={handleEmailUpdate}>
+                            <DropdownMenuItem 
+                              onClick={(e) => e.stopPropagation()}
+                              onSelect={(e) => e.preventDefault()}
+                            >
+                              <FileEdit className="mr-2 h-4 w-4" />
+                              Upraviť
+                            </DropdownMenuItem>
+                          </EditEmailDialog>
                           <DropdownMenuItem onClick={(e) => {
                             e.stopPropagation();
                             console.log(`Changing time for email ${email.id}`);
