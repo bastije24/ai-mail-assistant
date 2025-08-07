@@ -264,10 +264,10 @@ export const CalendarDeadliner = ({ emails }: CalendarDeadlinerProps) => {
                   caption_label: "text-sm font-medium",
                   table: "w-full border-collapse space-y-1",
                   head_row: "flex w-full",
-                  head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] flex-1 flex justify-center",
+                  head_cell: "text-muted-foreground rounded-md font-normal text-[0.8rem] flex-1 flex justify-center items-center min-h-[2rem]",
                   row: "flex w-full mt-2",
-                  cell: "h-9 w-full text-center text-sm p-0 relative flex-1 flex justify-center items-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-                  day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors",
+                  cell: "text-center text-sm p-0 relative flex-1 flex justify-center items-center min-h-[2.25rem] aspect-square [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                  day: "w-full h-full min-h-[2.25rem] aspect-square p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors flex items-center justify-center text-xs sm:text-sm",
                   day_selected: "bg-blue-200 text-blue-900 hover:bg-blue-300 hover:text-blue-900 focus:bg-blue-200 focus:text-blue-900",
                   day_today: "bg-primary text-primary-foreground font-semibold",
                   day_outside: "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30"
