@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { EditDraftDialog } from "@/components/EditDraftDialog";
 import { ComposeEmailDialog } from "./ComposeEmailDialog";
 import type { EmailListProps } from "../types";
 
@@ -108,6 +109,12 @@ export const Drafts = ({ emails }: EmailListProps) => {
   };
 
   const getTotalWords = () => drafts.reduce((sum, draft) => sum + draft.wordCount, 0);
+
+  const handleDraftUpdate = (updatedDraft: any) => {
+    setDrafts(prev => prev.map(draft => 
+      draft.id === updatedDraft.id ? updatedDraft : draft
+    ));
+  };
 
   const handleContinue = (draftId: string) => {
     const draft = drafts.find(d => d.id === draftId);
@@ -240,14 +247,19 @@ export const Drafts = ({ emails }: EmailListProps) => {
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 border-t border-border">
-                    <Button 
-                      size="sm" 
-                      className="bg-ai-primary hover:bg-ai-primary/90"
-                      onClick={() => handleContinue(draft.id)}
+                    <EditDraftDialog 
+                      draft={draft} 
+                      onDraftUpdate={handleDraftUpdate}
+                      onDraftSend={handleSend}
                     >
-                      <FileEdit className="mr-2 h-3 w-3" />
-                      Pokračovať
-                    </Button>
+                      <Button 
+                        size="sm" 
+                        className="bg-ai-primary hover:bg-ai-primary/90"
+                      >
+                        <FileEdit className="mr-2 h-3 w-3" />
+                        Pokračovať
+                      </Button>
+                    </EditDraftDialog>
                     <Button 
                       size="sm" 
                       variant="outline"
