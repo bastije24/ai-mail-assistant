@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Clock, CheckCircle, HelpCircle } from "lucide-react";
+import { Clock, CheckCircle, HelpCircle, Edit3, Save, X } from "lucide-react";
 
 interface Meeting {
   id: string;
@@ -23,6 +26,9 @@ interface MinutesTabProps {
 }
 
 export const MinutesTab = ({ meeting }: MinutesTabProps) => {
+  const [isEditingSummary, setIsEditingSummary] = useState(false);
+  const [editedSummary, setEditedSummary] = useState("");
+
   // Mock data for detailed minutes
   const minutesData = {
     summary: [
@@ -77,6 +83,22 @@ export const MinutesTab = ({ meeting }: MinutesTabProps) => {
     ]
   };
 
+  const handleEditSummary = () => {
+    setEditedSummary(minutesData.summary.join("\n• "));
+    setIsEditingSummary(true);
+  };
+
+  const handleSaveSummary = () => {
+    // Here you would save the edited summary
+    console.log("Saving summary:", editedSummary);
+    setIsEditingSummary(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingSummary(false);
+    setEditedSummary("");
+  };
+
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
@@ -104,18 +126,47 @@ export const MinutesTab = ({ meeting }: MinutesTabProps) => {
       {/* Summary Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            Stručné zhrnutie
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              Stručné zhrnutie
+            </CardTitle>
+            {!isEditingSummary && (
+              <Button variant="outline" size="sm" onClick={handleEditSummary}>
+                <Edit3 className="h-4 w-4 mr-2" />
+                Upraviť
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          {minutesData.summary.map((point, idx) => (
-            <div key={idx} className="flex items-start gap-2">
-              <span className="text-primary font-bold text-sm mt-1">•</span>
-              <p className="text-sm leading-relaxed">{point}</p>
+          {isEditingSummary ? (
+            <div className="space-y-4">
+              <Textarea
+                value={editedSummary}
+                onChange={(e) => setEditedSummary(e.target.value)}
+                placeholder="Zadajte body zhrnutia, každý na nový riadok začínajúci •"
+                className="min-h-32"
+              />
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={handleCancelEdit}>
+                  <X className="h-4 w-4 mr-2" />
+                  Zrušiť
+                </Button>
+                <Button size="sm" onClick={handleSaveSummary}>
+                  <Save className="h-4 w-4 mr-2" />
+                  Uložiť
+                </Button>
+              </div>
             </div>
-          ))}
+          ) : (
+            minutesData.summary.map((point, idx) => (
+              <div key={idx} className="flex items-start gap-2">
+                <span className="text-primary font-bold text-sm mt-1">•</span>
+                <p className="text-sm leading-relaxed">{point}</p>
+              </div>
+            ))
+          )}
         </CardContent>
       </Card>
 

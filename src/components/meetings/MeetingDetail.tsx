@@ -1,7 +1,10 @@
-import { ArrowLeft, Video, Share, ExternalLink, Download } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, Video, Share, ExternalLink, Download, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
 import { MinutesTab } from "./tabs/MinutesTab";
 import { ActionItemsTab } from "./tabs/ActionItemsTab";
 import { LeaderboardTab } from "./tabs/LeaderboardTab";
@@ -27,6 +30,8 @@ interface MeetingDetailProps {
 }
 
 export const MeetingDetail = ({ meeting, onBack }: MeetingDetailProps) => {
+  const [showRecording, setShowRecording] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(false);
   const getStatusBadge = (status: Meeting["status"]) => {
     const variants = {
       processing: "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400",
@@ -99,12 +104,20 @@ export const MeetingDetail = ({ meeting, onBack }: MeetingDetailProps) => {
           
           <div className="flex items-center gap-2">
             {meeting.hasRecording && (
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowRecording(true)}
+              >
                 <Video className="h-4 w-4 mr-2" />
                 Otvoriť nahrávku
               </Button>
             )}
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowTranscript(true)}
+            >
               <ExternalLink className="h-4 w-4 mr-2" />
               Transkript
             </Button>
@@ -146,6 +159,101 @@ export const MeetingDetail = ({ meeting, onBack }: MeetingDetailProps) => {
             <LeaderboardTab meeting={meeting} />
           </TabsContent>
         </Tabs>
+        
+        {/* Recording Dialog */}
+        <Dialog open={showRecording} onOpenChange={setShowRecording}>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Play className="h-5 w-5" />
+                Nahrávka meetingu: {meeting.title}
+              </DialogTitle>
+            </DialogHeader>
+            <Card>
+              <CardContent className="p-8 text-center">
+                <div className="h-64 bg-black rounded-lg flex items-center justify-center mb-4">
+                  <div className="text-white text-center">
+                    <Play className="h-16 w-16 mx-auto mb-4 opacity-70" />
+                    <p className="text-lg">Video nahrávka</p>
+                    <p className="text-sm opacity-70">Kliknite pre prehranie</p>
+                  </div>
+                </div>
+                <div className="flex justify-center gap-2">
+                  <Button>
+                    <Play className="h-4 w-4 mr-2" />
+                    Prehrať
+                  </Button>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Stiahnuť
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </DialogContent>
+        </Dialog>
+
+        {/* Transcript Dialog */}
+        <Dialog open={showTranscript} onOpenChange={setShowTranscript}>
+          <DialogContent className="max-w-4xl max-h-[80vh]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <ExternalLink className="h-5 w-5" />
+                Transkript meetingu: {meeting.title}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="max-h-96 overflow-y-auto space-y-4 p-4 bg-muted/30 rounded-lg">
+              {/* Mock transcript data */}
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">09:01</span>
+                  <div>
+                    <span className="font-medium">Martin K.:</span>
+                    <span className="ml-2">Dobrý deň všetkým, začneme náš týždenný standup. Ako sa máte dnes?</span>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">09:02</span>
+                  <div>
+                    <span className="font-medium">Anna S.:</span>
+                    <span className="ml-2">Ahoj Martin, mám sa dobre. Dokončila som včera implementáciu API endpointov.</span>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">09:03</span>
+                  <div>
+                    <span className="font-medium">Peter N.:</span>
+                    <span className="ml-2">Skvelé Anna! Ja som pracoval na testoch, ale narazil som na jeden problém s databázou.</span>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">09:04</span>
+                  <div>
+                    <span className="font-medium">Martin K.:</span>
+                    <span className="ml-2">Aký druh problému? Môžeme ti pomôcť.</span>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <span className="text-xs text-muted-foreground font-mono bg-muted px-2 py-1 rounded">09:05</span>
+                  <div>
+                    <span className="font-medium">Peter N.:</span>
+                    <span className="ml-2">Migrácie sa nepodarilo spustiť na staging prostredí. Hádam je to problém s permisiami.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export TXT
+              </Button>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export PDF
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
