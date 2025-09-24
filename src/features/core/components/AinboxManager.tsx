@@ -4,6 +4,7 @@ import { EmailDetail, useEmailData, AllEmails, EmailsList, Drafts, Trash, Archiv
 import { AiAssistantPanel } from "@/components/AiAssistantPanel";
 import { Summarizer } from "@/components/Summarizer";
 import { CalendarDeadliner } from "@/components/CalendarDeadliner";
+import { MeetingCalendar } from "@/components/meetings/MeetingCalendar";
 import { AiTagging } from "@/components/AiTagging";
 import { SendLater } from "@/components/SendLater";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -25,6 +26,7 @@ export const AinboxManager = () => {
     switch (selectedSection) {
       case "summarizer": return <Summarizer emails={emails} />;
       case "calendar-deadliner": return <CalendarDeadliner emails={emails} />;
+      case "meetings": return <MeetingCalendar />;
       case "ai-tagging": return <AiTagging emails={emails} />;
       case "ai-assistant": return <AiAssistantPanel email={selectedEmail} />;
       case "send-later": return <SendLater emails={emails} />;

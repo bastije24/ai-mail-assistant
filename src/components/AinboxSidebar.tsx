@@ -74,6 +74,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true,
   const aiTools = [
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
     { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
+    { id: "meetings", label: "Meetings", icon: MessageCircle, count: 8 },
     { id: "ai-tagging", label: "AI Tagging", icon: Tag },
     { id: "ai-assistant", label: "AI Asistent", icon: Bot },
   ];
