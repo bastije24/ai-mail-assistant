@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { 
   Table, 
   TableBody, 
@@ -51,6 +53,7 @@ interface ActionItem {
 
 export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [showExportDialog, setShowExportDialog] = useState(false);
 
   // Mock action items data
   const actionItems: ActionItem[] = [
@@ -170,6 +173,33 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
     );
   };
 
+  const handleBulkAssign = () => {
+    if (selectedItems.length > 0) {
+      toast.success(`Priradenie ${selectedItems.length} úloh je pripravené`);
+    }
+  };
+
+  const handleBulkDueDate = () => {
+    if (selectedItems.length > 0) {
+      toast.success(`Zmena termínu pre ${selectedItems.length} úloh je pripravená`);
+    }
+  };
+
+  const handleBulkComplete = () => {
+    if (selectedItems.length > 0) {
+      toast.success(`Označenie ${selectedItems.length} úloh ako hotové`);
+      setSelectedItems([]);
+    }
+  };
+
+  const handleExport = () => {
+    setShowExportDialog(true);
+  };
+
+  const handleProjectTool = () => {
+    toast.success("Otváranie v project management tool...");
+  };
+
   const stats = {
     total: actionItems.length,
     completed: actionItems.filter(item => item.status === "completed").length,
@@ -242,28 +272,51 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
           <div className="flex items-center justify-between">
             <CardTitle>Rýchle akcie</CardTitle>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleExport}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleProjectTool}
+              >
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Projekt tool
+                Project tool
               </Button>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" disabled={selectedItems.length === 0}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={selectedItems.length === 0}
+              onClick={handleBulkAssign}
+            >
               <UserPlus className="h-4 w-4 mr-2" />
               Priradiť ({selectedItems.length})
             </Button>
-            <Button variant="outline" size="sm" disabled={selectedItems.length === 0}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={selectedItems.length === 0}
+              onClick={handleBulkDueDate}
+            >
               <Calendar className="h-4 w-4 mr-2" />
               Zmeniť termín
             </Button>
-            <Button variant="outline" size="sm" disabled={selectedItems.length === 0}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={selectedItems.length === 0}
+              onClick={handleBulkComplete}
+            >
               <CheckCircle className="h-4 w-4 mr-2" />
               Označiť hotové
             </Button>
@@ -276,88 +329,144 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
         <CardHeader>
           <CardTitle>Action Items ({actionItems.length})</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
-                  <input 
-                    type="checkbox" 
-                    className="rounded"
-                    checked={selectedItems.length === actionItems.length}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedItems(actionItems.map(item => item.id));
-                      } else {
-                        setSelectedItems([]);
-                      }
-                    }}
-                  />
-                </TableHead>
-                <TableHead>Úloha</TableHead>
-                <TableHead>Priradený</TableHead>
-                <TableHead>Termín</TableHead>
-                <TableHead>Priorita</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Akcie</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {actionItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>
+        <CardContent className="max-h-96 overflow-y-auto">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12">
                     <input 
-                      type="checkbox"
+                      type="checkbox" 
                       className="rounded"
-                      checked={selectedItems.includes(item.id)}
-                      onChange={() => handleItemSelect(item.id)}
+                      checked={selectedItems.length === actionItems.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedItems(actionItems.map(item => item.id));
+                        } else {
+                          setSelectedItems([]);
+                        }
+                      }}
                     />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      {getStatusIcon(item.status)}
-                      <span>{item.task}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-6 w-6">
-                        <AvatarFallback className="text-xs">
-                          {getInitials(item.assignee)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm">{item.assignee}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className={`text-sm ${
-                      item.status === "overdue" ? "text-red-600 font-medium" : "text-muted-foreground"
-                    }`}>
-                      {formatDate(item.dueDate)}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    {getPriorityBadge(item.priority)}
-                  </TableCell>
-                  <TableCell>
-                    {getStatusBadge(item.status)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button variant="ghost" size="sm">
-                        Upraviť
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        Detail
-                      </Button>
-                    </div>
-                  </TableCell>
+                  </TableHead>
+                  <TableHead>Úloha</TableHead>
+                  <TableHead>Priradený</TableHead>
+                  <TableHead>Termín</TableHead>
+                  <TableHead>Priorita</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Akcie</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {actionItems.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      <input 
+                        type="checkbox"
+                        className="rounded"
+                        checked={selectedItems.includes(item.id)}
+                        onChange={() => handleItemSelect(item.id)}
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(item.status)}
+                        <span className="max-w-xs truncate">{item.task}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarFallback className="text-xs">
+                            {getInitials(item.assignee)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm">{item.assignee}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`text-sm ${
+                        item.status === "overdue" ? "text-red-600 font-medium" : "text-muted-foreground"
+                      }`}>
+                        {formatDate(item.dueDate)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {getPriorityBadge(item.priority)}
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(item.status)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => toast.success(`Upravenie úlohy: ${item.task}`)}
+                        >
+                          Upraviť
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => toast.success(`Detail úlohy: ${item.task}`)}
+                        >
+                          Detail
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
+
+      {/* Export Dialog */}
+      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Export Action Items</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Vyberte formát pre export action items:
+            </p>
+            <div className="flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  toast.success("Exportujem do CSV...");
+                  setShowExportDialog(false);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  toast.success("Exportujem do Excel...");
+                  setShowExportDialog(false);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export Excel
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  toast.success("Exportujem do PDF...");
+                  setShowExportDialog(false);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export PDF
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
