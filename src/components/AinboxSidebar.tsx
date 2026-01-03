@@ -23,7 +23,8 @@ import {
   Upload,
   Eye,
   EyeOff,
-  Save
+  Save,
+  PenSquare
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -176,6 +177,15 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true,
               Workflow
             </h4>
             <div className="space-y-1">
+              {/* Nový email button */}
+              <Button
+                variant="default"
+                className="w-full justify-start h-auto py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md mb-2"
+                onClick={() => onSectionChange("compose")}
+              >
+                <PenSquare className="mr-3 h-4 w-4" />
+                <span className="flex-1 text-left font-medium">Nový email</span>
+              </Button>
               {workflowItems.map((item) => renderMenuItem(item, selectedSection === item.id))}
             </div>
           </div>
