@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { 
   Table, 
@@ -20,7 +22,10 @@ import {
   UserPlus, 
   Calendar, 
   Download,
-  ExternalLink
+  ExternalLink,
+  Mail,
+  Send,
+  X
 } from "lucide-react";
 
 interface Meeting {
@@ -54,6 +59,12 @@ interface ActionItem {
 export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [emailData, setEmailData] = useState({
+    to: "",
+    subject: `Action Items: ${meeting.title}`,
+    content: ""
+  });
 
   // Mock action items data
   const actionItems: ActionItem[] = [
@@ -200,6 +211,29 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
     toast.success("Otváranie v project management tool...");
   };
 
+  const handleNewEmail = () => {
+    const itemsList = actionItems
+      .map(item => `• ${item.task} (${item.assignee}, termín: ${formatDate(item.dueDate)})`)
+      .join("\n");
+    
+    setEmailData({
+      to: "",
+      subject: `Action Items: ${meeting.title}`,
+      content: `Dobrý deň,\n\nposielam zoznam úloh z meetingu "${meeting.title}":\n\n${itemsList}\n\nS pozdravom`
+    });
+    setShowEmailDialog(true);
+  };
+
+  const handleSendEmail = () => {
+    if (!emailData.to) {
+      toast.error("Zadajte príjemcu emailu");
+      return;
+    }
+    toast.success(`Email odoslaný na ${emailData.to}`);
+    setShowEmailDialog(false);
+    setEmailData({ to: "", subject: "", content: "" });
+  };
+
   const stats = {
     total: actionItems.length,
     completed: actionItems.filter(item => item.status === "completed").length,
@@ -266,60 +300,89 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
+      {/* Quick Actions / Workflow */}
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle>Rýchle akcie</CardTitle>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={handleExport}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={handleProjectTool}
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Project tool
-              </Button>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                <ExternalLink className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Workflow</CardTitle>
+                <p className="text-sm text-muted-foreground">Spravujte a zdieľajte úlohy</p>
+              </div>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
+        <CardContent className="space-y-4">
+          {/* Main Action Buttons */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Button 
-              variant="outline" 
-              size="sm" 
-              disabled={selectedItems.length === 0}
-              onClick={handleBulkAssign}
+              onClick={handleNewEmail}
+              className="h-auto py-4 flex flex-col items-center gap-2 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg shadow-blue-500/25"
             >
-              <UserPlus className="h-4 w-4 mr-2" />
-              Priradiť ({selectedItems.length})
+              <Mail className="h-5 w-5" />
+              <span className="text-sm font-medium">Nový email</span>
             </Button>
             <Button 
               variant="outline" 
-              size="sm" 
-              disabled={selectedItems.length === 0}
-              onClick={handleBulkDueDate}
+              onClick={handleExport}
+              className="h-auto py-4 flex flex-col items-center gap-2 border-2 hover:bg-accent"
             >
-              <Calendar className="h-4 w-4 mr-2" />
-              Zmeniť termín
+              <Download className="h-5 w-5 text-green-600" />
+              <span className="text-sm font-medium">Export</span>
             </Button>
             <Button 
-              variant="outline" 
-              size="sm" 
-              disabled={selectedItems.length === 0}
-              onClick={handleBulkComplete}
+              variant="outline"
+              onClick={handleProjectTool}
+              className="h-auto py-4 flex flex-col items-center gap-2 border-2 hover:bg-accent"
             >
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Označiť hotové
+              <ExternalLink className="h-5 w-5 text-purple-600" />
+              <span className="text-sm font-medium">Project tool</span>
             </Button>
+            <Button 
+              variant="outline"
+              onClick={() => toast.success("Synchronizácia s kalendárom...")}
+              className="h-auto py-4 flex flex-col items-center gap-2 border-2 hover:bg-accent"
+            >
+              <Calendar className="h-5 w-5 text-orange-600" />
+              <span className="text-sm font-medium">Kalendár</span>
+            </Button>
+          </div>
+
+          {/* Bulk Actions */}
+          <div className="pt-3 border-t">
+            <p className="text-xs text-muted-foreground mb-2">Hromadné akcie ({selectedItems.length} vybraných)</p>
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={selectedItems.length === 0}
+                onClick={handleBulkAssign}
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Priradiť
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={selectedItems.length === 0}
+                onClick={handleBulkDueDate}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Zmeniť termín
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={selectedItems.length === 0}
+                onClick={handleBulkComplete}
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Označiť hotové
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -462,6 +525,67 @@ export const ActionItemsTab = ({ meeting }: ActionItemsTabProps) => {
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export PDF
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* New Email Dialog */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <DialogTitle>Nový email</DialogTitle>
+                <p className="text-sm text-muted-foreground">Pošlite action items emailom</p>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Príjemca</label>
+              <Input 
+                placeholder="email@example.com"
+                value={emailData.to}
+                onChange={(e) => setEmailData(prev => ({ ...prev, to: e.target.value }))}
+                className="border-2"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Predmet</label>
+              <Input 
+                value={emailData.subject}
+                onChange={(e) => setEmailData(prev => ({ ...prev, subject: e.target.value }))}
+                className="border-2"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Obsah</label>
+              <Textarea 
+                value={emailData.content}
+                onChange={(e) => setEmailData(prev => ({ ...prev, content: e.target.value }))}
+                rows={8}
+                className="border-2 resize-none"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowEmailDialog(false)}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Zrušiť
+              </Button>
+              <Button 
+                onClick={handleSendEmail}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Odoslať email
               </Button>
             </div>
           </div>
