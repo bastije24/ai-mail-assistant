@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { 
-  Mail, TrendingUp, Clock, Sparkles, Calendar, 
-  ArrowUpRight, ArrowDownRight, BarChart3, PieChart,
-  Send, Inbox, Archive, Tag
+  Mail, TrendingUp, Clock, Sparkles, Calendar as CalendarIcon, 
+  ArrowUpRight, ArrowDownRight, BarChart3, 
+  Send, CheckCircle, AlertCircle, Users, Tag
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
 import { Badge } from "./ui/badge";
+import { Calendar } from "./ui/calendar";
 import { 
   Select,
   SelectContent,
@@ -28,13 +28,13 @@ import {
 } from "recharts";
 
 const emailActivityData = [
-  { day: "Po", received: 45, sent: 12, aiProcessed: 38 },
-  { day: "Ut", received: 52, sent: 18, aiProcessed: 45 },
-  { day: "St", received: 38, sent: 15, aiProcessed: 32 },
-  { day: "Št", received: 65, sent: 22, aiProcessed: 58 },
-  { day: "Pi", received: 48, sent: 28, aiProcessed: 42 },
-  { day: "So", received: 15, sent: 5, aiProcessed: 12 },
-  { day: "Ne", received: 8, sent: 2, aiProcessed: 6 },
+  { day: "Po", odoslane: 12, dokoncene: 38 },
+  { day: "Ut", odoslane: 18, dokoncene: 45 },
+  { day: "St", odoslane: 15, dokoncene: 32 },
+  { day: "Št", odoslane: 22, dokoncene: 58 },
+  { day: "Pi", odoslane: 28, dokoncene: 42 },
+  { day: "So", odoslane: 5, dokoncene: 12 },
+  { day: "Ne", odoslane: 2, dokoncene: 6 },
 ];
 
 const weeklyTrendData = [
@@ -48,45 +48,53 @@ const categoryData = [
   { name: "Práca", count: 245, color: "bg-blue-500" },
   { name: "Osobné", count: 89, color: "bg-green-500" },
   { name: "Newsletter", count: 156, color: "bg-purple-500" },
-  { name: "Dôležité", count: 67, color: "bg-red-500" },
+  { name: "Dôležité", count: 67, color: "bg-destructive" },
   { name: "Promo", count: 203, color: "bg-orange-500" },
+];
+
+const upcomingEvents = [
+  { title: "Team standup", time: "09:00", type: "meeting" },
+  { title: "Deadline: Report Q4", time: "12:00", type: "deadline" },
+  { title: "Call s klientom", time: "14:30", type: "meeting" },
+  { title: "Review PR", time: "16:00", type: "task" },
 ];
 
 export const Dashboard = () => {
   const [timeRange, setTimeRange] = useState("week");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   const stats = [
     {
-      title: "Prijaté emaily",
-      value: "1,247",
-      change: "+12%",
+      title: "Dokončené úlohy",
+      value: "47",
+      change: "+8%",
       changeType: "positive",
-      icon: Inbox,
+      icon: CheckCircle,
       subtitle: "za posledných 7 dní",
     },
     {
-      title: "AI spracované",
-      value: "1,089",
-      change: "+18%",
+      title: "Čakajúce odpovede",
+      value: "12",
+      change: "-3",
       changeType: "positive",
-      icon: Sparkles,
-      subtitle: "87% automatizácia",
+      icon: AlertCircle,
+      subtitle: "potrebujú pozornosť",
     },
     {
       title: "Odoslané emaily",
       value: "156",
-      change: "-5%",
-      changeType: "negative",
+      change: "+15%",
+      changeType: "positive",
       icon: Send,
       subtitle: "vrátane naplánovaných",
     },
     {
-      title: "Ušetrený čas",
-      value: "12.5h",
-      change: "+23%",
+      title: "Aktívne kontakty",
+      value: "234",
+      change: "+12",
       changeType: "positive",
-      icon: Clock,
-      subtitle: "vďaka AI asistentovi",
+      icon: Users,
+      subtitle: "tento mesiac",
     },
   ];
 
@@ -156,7 +164,7 @@ export const Dashboard = () => {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-medium">
-              Emailová aktivita
+              Aktivita
             </CardTitle>
             <div className="flex items-center gap-2">
               <Select value={timeRange} onValueChange={setTimeRange}>
@@ -194,19 +202,19 @@ export const Dashboard = () => {
                   />
                   <Line
                     type="monotone"
-                    dataKey="received"
+                    dataKey="odoslane"
                     stroke="hsl(var(--primary))"
                     strokeWidth={2}
                     dot={{ fill: "hsl(var(--primary))", strokeWidth: 2 }}
-                    name="Prijaté"
+                    name="Odoslané"
                   />
                   <Line
                     type="monotone"
-                    dataKey="aiProcessed"
+                    dataKey="dokoncene"
                     stroke="hsl(142.1 76.2% 36.3%)"
                     strokeWidth={2}
                     dot={{ fill: "hsl(142.1 76.2% 36.3%)", strokeWidth: 2 }}
-                    name="AI spracované"
+                    name="Dokončené"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -214,67 +222,42 @@ export const Dashboard = () => {
             <div className="flex items-center justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-primary" />
-                <span className="text-sm text-muted-foreground">Prijaté</span>
+                <span className="text-sm text-muted-foreground">Odoslané</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-green-500" />
-                <span className="text-sm text-muted-foreground">AI spracované</span>
+                <span className="text-sm text-muted-foreground">Dokončené</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Monthly Goals */}
+        {/* Calendar */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-medium flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Mesačné ciele
+              <CalendarIcon className="h-4 w-4" />
+              Kalendár
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center justify-center">
-              <div className="relative h-36 w-36">
-                <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="hsl(var(--muted))"
-                    strokeWidth="10"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="10"
-                    strokeLinecap="round"
-                    strokeDasharray={`${goals.percentage * 2.51} 251`}
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-foreground">
-                    {goals.percentage}%
-                  </span>
+          <CardContent className="flex flex-col items-center">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              className="rounded-md border-0 p-0"
+            />
+            {/* Today's Events */}
+            <div className="w-full mt-4 pt-4 border-t space-y-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase">Dnes</p>
+              {upcomingEvents.slice(0, 3).map((event, idx) => (
+                <div key={idx} className="flex items-center justify-between text-sm">
+                  <span className="text-foreground truncate">{event.title}</span>
+                  <Badge variant="outline" className="text-xs shrink-0 ml-2">
+                    {event.time}
+                  </Badge>
                 </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">Cieľ</p>
-                <p className="text-lg font-semibold text-foreground">
-                  {goals.target}
-                </p>
-              </div>
-              <div className="p-3 bg-muted/50 rounded-lg">
-                <p className="text-xs text-muted-foreground">Dosiahnuté</p>
-                <p className="text-lg font-semibold text-primary">
-                  {goals.achieved}
-                </p>
-              </div>
+              ))}
             </div>
           </CardContent>
         </Card>
