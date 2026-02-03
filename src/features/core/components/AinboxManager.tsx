@@ -8,6 +8,7 @@ import { MeetingCalendar } from "@/components/meetings/MeetingCalendar";
 import { AiTagging } from "@/components/AiTagging";
 import { SendLater } from "@/components/SendLater";
 import { ComposeEmail } from "@/components/ComposeEmail";
+import { Dashboard } from "@/components/Dashboard";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export const AinboxManager = () => {
 
   const renderMainContent = () => {
     switch (selectedSection) {
+      case "dashboard": return <Dashboard />;
       case "compose": return <ComposeEmail />;
       case "summarizer": return <Summarizer emails={emails} />;
       case "calendar-deadliner": return <CalendarDeadliner emails={emails} />;

@@ -24,7 +24,8 @@ import {
   Eye,
   EyeOff,
   Save,
-  PenSquare
+  PenSquare,
+  LayoutDashboard
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -73,6 +74,7 @@ export const AinboxSidebar = ({ selectedSection, onSectionChange, isOpen = true,
     { id: "privacy", label: "Dáta a súkromie", icon: Shield },
   ];
   const aiTools = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "summarizer", label: "Summarizer", icon: Sparkles, count: 3 },
     { id: "calendar-deadliner", label: "Kalendár & Deadliny", icon: Calendar, count: 13 },
     { id: "meetings", label: "Meetings", icon: MessageCircle, count: 8 },
